@@ -42,9 +42,9 @@ public class Contact implements IContact {
     public void setEmail(String email) { this.email = email; };
     public String getEmail() { return this.email; };
 
-    public ContactMatchResult CompareTo(Contact compareContact)
+    public ContactMatchResult compareTo(Contact compareContact)
     {
         // TODO: Need to add logic
-        return new ContactMatchResult(ContactMatchType.NoMatch);
+        return new ContactMatchResult(null);
     }
 }
