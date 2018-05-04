@@ -95,6 +95,22 @@ class ContactTest {
         return contact;
     }
 
+    private void clearAddress(Contact contact)
+    {
+        contact.setAddress(null);
+        contact.setCity(null);
+        contact.setState(null);
+        contact.setZip(null);
+    }
+
+    private void copyAddress(Contact contactToUpdate, Contact contactWithAddressToCopy)
+    {
+        contactToUpdate.setAddress(contactWithAddressToCopy.getAddress());
+        contactToUpdate.setCity(contactWithAddressToCopy.getCity());
+        contactToUpdate.setState(contactWithAddressToCopy.getState());
+        contactToUpdate.setZip(contactWithAddressToCopy.getZip());
+    }
+
     // Step 1 - Return ContactMatchType.NoMatch if nothing is specified in the
     // ContactToMerge or the ExistingContact
     @Test
@@ -130,15 +146,10 @@ class ContactTest {
     void compareTo_Identical_AddressMissing()
     {
         Contact c1 = createBaseContact();
-        c1.setAddress(null);
-        c1.setCity(null);
-        c1.setState(null);
-        c1.setZip(null);
+        clearAddress(c1);
+
         Contact c2 = createBaseContact();
-        c2.setAddress(null);
-        c2.setCity(null);
-        c2.setState(null);
-        c2.setZip(null);
+        clearAddress(c2);
 
         assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
     }
@@ -165,7 +176,7 @@ class ContactTest {
         assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
     }
 
-    // Step 3 - Return ContactMatchType.NoMatch is if all of the parts that are specified
+    // Step 3 - Return ContactMatchType.NoMatch if all of the parts that are specified
     // in ContactToMerge do not match the ExistingContact
 
     @Test
@@ -180,10 +191,8 @@ class ContactTest {
     void compareTo_NoMatch_AddressMissing()
     {
         Contact c1 = createBaseContact();
-        c1.setAddress(null);
-        c1.setCity(null);
-        c1.setState(null);
-        c1.setZip(null);
+        clearAddress(c1);
+
         Contact c2 = createNonMatchingBaseContact();
 
         assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
@@ -194,7 +203,7 @@ class ContactTest {
     {
         Contact c1 = createBaseContact();
         c1.setPhone(null);
-        Contact c2 = createBaseContact();
+        Contact c2 = createNonMatchingBaseContact();
 
         assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
     }
@@ -204,38 +213,74 @@ class ContactTest {
     {
         Contact c1 = createBaseContact();
         c1.setEmail(null);
-        Contact c2 = createBaseContact();
+        Contact c2 = createNonMatchingBaseContact();
 
         assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
     }
 
     // Step 4 - Return ContactMatchType.Match if the Name and at least one of the other
-    // parts (Address, Phones, or Email) match if all the parts in the ContactToMerge
+    // parts (Address, Phones, or Email) match and if all the parts in the ContactToMerge
     // that don't match are empty or null
     @Test
     void compareTo_Match_NameAndAddress()
     {
+        Contact notMatching = createNonMatchingBaseContact();
 
+        Contact c1 = createBaseContact();
+        c1.setEmail(null);
+        c1.setPhone(null);
+        Contact c2 = createBaseContact();
+        c2.setEmail(notMatching.getEmail());
+        c2.setPhone(notMatching.getPhone());
+
+        assertEquals(ContactMatchType.Match, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_Match_NameAndEmail()
     {
+        Contact notMatching = createNonMatchingBaseContact();
 
+        Contact c1 = createBaseContact();
+        c1.setPhone(null);
+        clearAddress(c1);
+
+        Contact c2 = createBaseContact();
+        c2.setPhone(notMatching.getPhone());
+        copyAddress(c1, notMatching);
+
+        assertEquals(ContactMatchType.Match, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_Match_NameAndPhone()
     {
+        Contact notMatching = createNonMatchingBaseContact();
 
+        Contact c1 = createBaseContact();
+        c1.setEmail(null);
+        clearAddress(c1);
+
+        Contact c2 = createBaseContact();
+        c2.setEmail(notMatching.getEmail());
+        copyAddress(c1, notMatching);
+
+        assertEquals(ContactMatchType.Match, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_PotentialMatch_OnlyNameSpecified()
     {
+        Contact c1 = new Contact();
+        c1.setLastName("Smith");
+        c1.setFirstName("Adam");
 
+        Contact c2 = new Contact();
+        c2.setLastName(c1.getLastName());
+        c2.setFirstName(c1.getFirstName());
+
+        assertEquals(ContactMatchType.Match, c1.compareTo(c2).getMatchType());
     }
-
 
     // Step 5 - Return ContactMatchType.MatchButModifying if the Name and at least one
     // of the other parts (Address, Phones, or Email) match but there is at least one
@@ -243,19 +288,42 @@ class ContactTest {
     @Test
     void compareTo_MatchButModifying_NameAndAddress()
     {
+        Contact notMatching = createNonMatchingBaseContact();
 
+        Contact c1 = createBaseContact();
+        Contact c2 = createBaseContact();
+        c2.setEmail(notMatching.getEmail());
+        c2.setPhone(notMatching.getPhone());
+
+        assertEquals(ContactMatchType.MatchButModifying, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_MatchButModifying_NameAndEmail()
     {
+        Contact notMatching = createNonMatchingBaseContact();
 
+        Contact c1 = createBaseContact();
+
+        Contact c2 = createBaseContact();
+        c2.setPhone(notMatching.getPhone());
+        copyAddress(c1, notMatching);
+
+        assertEquals(ContactMatchType.MatchButModifying, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_MatchButModifying_NameAndPhone()
     {
+        Contact notMatching = createNonMatchingBaseContact();
 
+        Contact c1 = createBaseContact();
+
+        Contact c2 = createBaseContact();
+        c2.setEmail(notMatching.getEmail());
+        copyAddress(c1, notMatching);
+
+        assertEquals(ContactMatchType.MatchButModifying, c1.compareTo(c2).getMatchType());
     }
 
     // Step 6 - Return ContactMatchType.PotentialMatch if the Names might match
@@ -263,13 +331,27 @@ class ContactTest {
     @Test
     void compareTo_PotentialMatch_OnlyNameMatches()
     {
+        Contact c1 = createBaseContact();
 
+        Contact c2 = createNonMatchingBaseContact();
+        c2.setLastName(c1.getLastName());
+        c2.setFirstName(c1.getFirstName());
+
+        assertEquals(ContactMatchType.PotentialMatch, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_PotentialMatch_NameMightMatch()
     {
+        Contact c1 = createBaseContact();
 
+        Contact c2 = createNonMatchingBaseContact();
+        c2.setLastName(c1.getLastName());
+
+        // Set first name to first initial to cause a maybe result on name matching
+        c2.setFirstName(c1.getFirstName().substring(0, 1));
+
+        assertEquals(ContactMatchType.PotentialMatch, c1.compareTo(c2).getMatchType());
     }
 
     // Step 7 - Return ContactMatchType.Related if at least 1 of Address, Phone, or
@@ -277,19 +359,34 @@ class ContactTest {
     @Test
     void compareTo_Related_AddressMatch()
     {
+        Contact c1 = createBaseContact();
 
+        Contact c2 = createNonMatchingBaseContact();
+        copyAddress(c2, c1);
+
+        assertEquals(ContactMatchType.Related, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_Related_PhoneMatch()
     {
+        Contact c1 = createBaseContact();
 
+        Contact c2 = createNonMatchingBaseContact();
+        c2.setPhone(c1.getPhone());
+
+        assertEquals(ContactMatchType.Related, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_Related_EmailMatch()
     {
+        Contact c1 = createBaseContact();
 
+        Contact c2 = createNonMatchingBaseContact();
+        c2.setEmail(c1.getEmail());
+
+        assertEquals(ContactMatchType.Related, c1.compareTo(c2).getMatchType());
     }
 
     // Step 8 - Return ContactMatchType.PotentiallyRelated if at least one of
@@ -297,18 +394,27 @@ class ContactTest {
     @Test
     void compareTo_PotentiallyRelated_AddressMightMatch()
     {
+        Contact c1 = createBaseContact();
 
+        Contact c2 = createNonMatchingBaseContact();
+
+        // Make address match a maybe because road type (i.e. "St") is missing
+        c2.setAddress("123 Main");
+
+        assertEquals(ContactMatchType.Related, c1.compareTo(c2).getMatchType());
     }
 
     @Test
     void compareTo_PotentiallyRelated_PhoneMightMatch()
     {
-
+        // TODO: Need a way to get a "maybe" result on phone number. May
+        // need to wait until we create an interface so that we can use a mock.
     }
 
     @Test
     void compareTo_PotentiallyRelated_EmailMightMatch()
     {
-
+        // TODO: Need a way to get a "maybe" result on phone number. May
+        // need to wait until we create an interface so that we can use a mock.
     }
 }
