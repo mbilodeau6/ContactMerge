@@ -117,14 +117,94 @@ class ContactTest {
 
     // Step 2 - Return ContactMatchType.Identical if all the parts that are specified in
     // either Contact match
+    @Test
+    void compareTo_Identical_AllParts()
+    {
+        Contact c1 = createBaseContact();
+        Contact c2 = createBaseContact();
+
+        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
+    }
+
+    @Test
+    void compareTo_Identical_AddressMissing()
+    {
+        Contact c1 = createBaseContact();
+        c1.setAddress(null);
+        c1.setCity(null);
+        c1.setState(null);
+        c1.setZip(null);
+        Contact c2 = createBaseContact();
+        c2.setAddress(null);
+        c2.setCity(null);
+        c2.setState(null);
+        c2.setZip(null);
+
+        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
+    }
+
+    @Test
+    void compareTo_Identical_PhoneMissing()
+    {
+        Contact c1 = createBaseContact();
+        c1.setPhone(null);
+        Contact c2 = createBaseContact();
+        c2.setPhone("");
+
+        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
+    }
+
+    @Test
+    void compareTo_Identical_EmailMissing()
+    {
+        Contact c1 = createBaseContact();
+        c1.setEmail("");
+        Contact c2 = createBaseContact();
+        c2.setEmail(null);
+
+        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
+    }
 
     // Step 3 - Return ContactMatchType.NoMatch is if all of the parts that are specified
     // in ContactToMerge do not match the ExistingContact
 
     @Test
-    void compareTo_NoMatchOnAny() {
+    void compareTo_NoMatch_AllParts() {
         Contact c1 = createBaseContact();
         Contact c2 = createNonMatchingBaseContact();
+
+        assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
+    }
+
+    @Test
+    void compareTo_NoMatch_AddressMissing()
+    {
+        Contact c1 = createBaseContact();
+        c1.setAddress(null);
+        c1.setCity(null);
+        c1.setState(null);
+        c1.setZip(null);
+        Contact c2 = createNonMatchingBaseContact();
+
+        assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
+    }
+
+    @Test
+    void compareTo_NoMatch_PhoneMissing()
+    {
+        Contact c1 = createBaseContact();
+        c1.setPhone(null);
+        Contact c2 = createBaseContact();
+
+        assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
+    }
+
+    @Test
+    void compareTo_NoMatch_EmailMissing()
+    {
+        Contact c1 = createBaseContact();
+        c1.setEmail(null);
+        Contact c2 = createBaseContact();
 
         assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
     }
@@ -132,18 +212,103 @@ class ContactTest {
     // Step 4 - Return ContactMatchType.Match if the Name and at least one of the other
     // parts (Address, Phones, or Email) match if all the parts in the ContactToMerge
     // that don't match are empty or null
+    @Test
+    void compareTo_Match_NameAndAddress()
+    {
+
+    }
+
+    @Test
+    void compareTo_Match_NameAndEmail()
+    {
+
+    }
+
+    @Test
+    void compareTo_Match_NameAndPhone()
+    {
+
+    }
+
+    @Test
+    void compareTo_PotentialMatch_OnlyNameSpecified()
+    {
+
+    }
+
 
     // Step 5 - Return ContactMatchType.MatchButModifying if the Name and at least one
     // of the other parts (Address, Phones, or Email) match but there is at least one
     // part that doesn't match
+    @Test
+    void compareTo_MatchButModifying_NameAndAddress()
+    {
+
+    }
+
+    @Test
+    void compareTo_MatchButModifying_NameAndEmail()
+    {
+
+    }
+
+    @Test
+    void compareTo_MatchButModifying_NameAndPhone()
+    {
+
+    }
 
     // Step 6 - Return ContactMatchType.PotentialMatch if the Names might match
+    // or the Name does match but nothing else matches
+    @Test
+    void compareTo_PotentialMatch_OnlyNameMatches()
+    {
+
+    }
+
+    @Test
+    void compareTo_PotentialMatch_NameMightMatch()
+    {
+
+    }
 
     // Step 7 - Return ContactMatchType.Related if at least 1 of Address, Phone, or
     // Email match
+    @Test
+    void compareTo_Related_AddressMatch()
+    {
+
+    }
+
+    @Test
+    void compareTo_Related_PhoneMatch()
+    {
+
+    }
+
+    @Test
+    void compareTo_Related_EmailMatch()
+    {
+
+    }
 
     // Step 8 - Return ContactMatchType.PotentiallyRelated if at least one of
     // Address, Phone, or Email is "might match"
+    @Test
+    void compareTo_PotentiallyRelated_AddressMightMatch()
+    {
 
-    // Step 9 - Misc cases of ContactMatchType.NoMatch
+    }
+
+    @Test
+    void compareTo_PotentiallyRelated_PhoneMightMatch()
+    {
+
+    }
+
+    @Test
+    void compareTo_PotentiallyRelated_EmailMightMatch()
+    {
+
+    }
 }
