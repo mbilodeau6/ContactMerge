@@ -103,12 +103,12 @@ class ContactTest {
         contact.setZip(null);
     }
 
-    private void copyAddress(Contact contactToUpdate, Contact contactWithAddressToCopy)
+    private void copyAddress(Contact targetContact, Contact sourceContact)
     {
-        contactToUpdate.setAddress(contactWithAddressToCopy.getAddress());
-        contactToUpdate.setCity(contactWithAddressToCopy.getCity());
-        contactToUpdate.setState(contactWithAddressToCopy.getState());
-        contactToUpdate.setZip(contactWithAddressToCopy.getZip());
+        targetContact.setAddress(sourceContact.getAddress());
+        targetContact.setCity(sourceContact.getCity());
+        targetContact.setState(sourceContact.getState());
+        targetContact.setZip(sourceContact.getZip());
     }
 
     // Step 1 - Return ContactMatchType.NoMatch if nothing is specified in the
