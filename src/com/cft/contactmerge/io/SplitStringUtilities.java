@@ -10,14 +10,10 @@ import java.util.Scanner;
 import java.util.*;
 
 public class SplitStringUtilities {
-    public static List<String> splitTsvString(String input)
-    {
+    public static List<String> splitTsvString(String input) {
         List<String> x = new ArrayList<String>();
 
-
-
         String testString = input;
-
 
         String _string = new String("");
         for(int i = 0;i< testString.length();i++){
@@ -25,8 +21,7 @@ public class SplitStringUtilities {
                 x.add(_string);
                 _string = "";
             }
-            else
-            {
+            else {
                 _string= _string+input.charAt(i);
             }
         }
@@ -63,13 +58,10 @@ public class SplitStringUtilities {
             y.add(strToCheck);
         }
 
-
-
         return y;
     }
 
-    public static List<String> splitCsvString(String input)
-    {
+    public static List<String> splitCsvString(String input) {
         List<String> x = new ArrayList<String>();
 
         String testString = input;
@@ -82,6 +74,5 @@ public class SplitStringUtilities {
         }
 
         return x;
-
     }
 }
