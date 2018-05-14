@@ -26,7 +26,8 @@ public class SplitStringUtilities {
             }
         }
         x.add(_string);
-        //test
+
+
         //////////Remove white space before any character, and after the last character in the strings.
 
         List<String> y = new ArrayList<String>();
@@ -66,18 +67,51 @@ public class SplitStringUtilities {
 
         String testString = input;
 
-        String _string = new String("");
-        for(int i = 0;i< testString.length();i++){
-            if(input.charAt(i)==','){
-                x.add(_string);
-                _string = "";
+
+
+        boolean isQuote = false;
+        boolean isComma = false;
+        int index = 0;
+        String part = new String("");
+
+        while(index<testString.length()){
+
+            switch(testString.charAt(index)){
+                case '\"'://then we are encapsulated
+                    isQuote = true;
+                    part = "";
+                    break;
+                case ',':
+                    isComma = true;
+                    break;
             }
-            else {
-                _string= _string+input.charAt(i);
+            if((isComma==false)&&(isQuote==false)){
+                part = part += testString.charAt(index);
+                index++;
             }
+            if((isComma==true)&&(isQuote==false)){
+                x.add(part);
+                part = "";
+                index++;
+                isComma=false;
+            }
+            if(isQuote==true) {
+                index++;
+                for (; (index < testString.length()) && (isQuote == true); index++) {
+                    if (testString.charAt(index) == '\"') {
+                        isQuote = false;//break the quotations
+                    } else {
+                        part = part + testString.charAt(index);
+                    }
+                }
+            }
+
         }
-        x.add(_string);
-        //test
+        x.add(part);
+
+
+
+
         //////////Remove white space before any character, and after the last character in the strings.
 
         List<String> y = new ArrayList<String>();
