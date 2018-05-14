@@ -26,7 +26,7 @@ public class SplitStringUtilities {
             }
         }
         x.add(_string);
-
+        //test
         //////////Remove white space before any character, and after the last character in the strings.
 
         List<String> y = new ArrayList<String>();
