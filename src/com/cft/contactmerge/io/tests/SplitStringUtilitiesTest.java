@@ -193,7 +193,7 @@ class SplitStringUtilitiesTest {
         assertEquals( "Joe", partsIterator.next(), "result[0]");
         assertEquals( "Adam\"s", partsIterator.next(), "result[1]");
         assertEquals( "on\"", partsIterator.next(), "result[2]");
-        assertEquals( "\"123 Main St\"", partsIterator.next(), "result[3]");
+        assertEquals( "123 Main St", partsIterator.next(), "result[3]");
 
 
     }
