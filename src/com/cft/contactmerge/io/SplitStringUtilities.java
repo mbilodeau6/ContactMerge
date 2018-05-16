@@ -71,45 +71,85 @@ public class SplitStringUtilities {
 
         boolean isQuote = false;
         boolean isComma = false;
+        boolean isTextBefore = false;
+        boolean isTextAfter = false;
+        boolean isSpace = false;
         int index = 0;
         String part = new String("");
 
-        while(index<testString.length()){
+        if(index<testString.length()) {
+            while (index < testString.length()) {
 
-            switch(testString.charAt(index)){
-                case '\"'://then we are encapsulated
-                    isQuote = true;
-                    part = "";
-                    break;
-                case ',':
-                    isComma = true;
-                    break;
-            }
-            if((isComma==false)&&(isQuote==false)){
-                part = part += testString.charAt(index);
-                index++;
-            }
-            if((isComma==true)&&(isQuote==false)){
-                x.add(part);
-                part = "";
-                index++;
-                isComma=false;
-            }
-            if(isQuote==true) {
-                index++;
-                for (; (index < testString.length()) && (isQuote == true); index++) {
-                    if (testString.charAt(index) == '\"') {
-                        isQuote = false;//break the quotations
-                    } else {
-                        part = part + testString.charAt(index);
+                switch (testString.charAt(index)) {
+                    case '\"'://then we are encapsulated
+                        isQuote = true;
+                        part = "";
+                        break;
+                    case ',':
+                        isComma = true;
+                        break;
+                    case ' ':
+                        isSpace = true;
+                        break;
+                }
+                if ((isComma == false) && (isQuote == false)) {
+                    isTextBefore = true;
+                }
+
+                if (isQuote) {
+                    index++;
+                    for (; (index < testString.length()) && (isQuote == true); index++) {
+                        if (testString.charAt(index) == '\"') {
+                            isQuote = false;//break the quotations
+                            x.add(part);
+                            part = "";
+
+                        } else {
+                            part = part + testString.charAt(index);
+                        }
+                    }
+                    isTextAfter = true;
+                    for (; index < testString.length() && isTextAfter; index++) { //eat up text after end quote
+                        if (testString.charAt(index) == ',') {
+                            isTextAfter = false;
+                        }
                     }
                 }
+                if (isTextBefore) {
+                    isComma = true;
+                    for (; (index < testString.length()) && (isComma == true); index++) {
+                        if (testString.charAt(index) == ',') {
+                            isComma = false;//break the quotations
+
+
+                        } else {
+                            part = part + testString.charAt(index);
+                        }
+                    }
+                    x.add(part);
+                    part = "";
+                }
+
+                if(isTextBefore){
+
+                }
+                else
+                {
+                    index++;
+                }
+
+              isQuote = false;
+              isComma = false;
+              isTextBefore = false;
+              isTextAfter = false;
+              isSpace = false;
+
+
             }
 
+        }else{
+            x.add(part);
         }
-        x.add(part);
-
-
 
 
         //////////Remove white space before any character, and after the last character in the strings.

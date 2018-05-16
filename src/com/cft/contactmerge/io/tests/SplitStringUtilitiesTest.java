@@ -189,10 +189,13 @@ class SplitStringUtilitiesTest {
         List<String> parts = SplitStringUtilities.splitCsvString("\"Joe\", Adam\"s,on\", \"123 Main St\"");
 
         Iterator<String> partsIterator = parts.iterator();
-        assertEquals(3, parts.size(), createVerificationMessage("result size"));
+        assertEquals(4, parts.size(), createVerificationMessage("result size"));
         assertEquals( "Joe", partsIterator.next(), "result[0]");
         assertEquals( "Adam\"s", partsIterator.next(), "result[1]");
-        assertEquals( "on\", 123 Main St\"", partsIterator.next(), "result[2]");
+        assertEquals( "on\"", partsIterator.next(), "result[2]");
+        assertEquals( "\"123 Main St\"", partsIterator.next(), "result[3]");
+
+
     }
 
 }
