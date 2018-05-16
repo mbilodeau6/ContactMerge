@@ -68,15 +68,17 @@ public class SplitStringUtilities {
         String testString = input;
 
 
-
         boolean isQuote = false;
         boolean isComma = false;
         boolean isTextBefore = false;
         boolean isTextAfter = false;
         boolean isSpace = false;
+        boolean isDoubleComma = false;
+
 
 
         int index = 0;
+
         String part = new String("");
 
 
@@ -97,7 +99,13 @@ public class SplitStringUtilities {
 
                 }
 
-                if(isQuote==false&&isTextAfter==false&&isComma==false&&isSpace==false){
+                if(index!=0) {
+                    if (isComma && testString.charAt(index - 1) == ',') {
+                        isDoubleComma = true;
+                    }
+                }
+
+                if(isQuote==false&&isTextAfter==false&&isComma==false&&isSpace==false&&isDoubleComma==false){
                     isTextBefore = true;
                 }
 
@@ -143,6 +151,10 @@ public class SplitStringUtilities {
                     if(part.length()==0){
                         x.add(part);
                     }
+                    if(isDoubleComma){
+                        x.add(part);
+                    }
+
                 }
 
 
@@ -153,9 +165,12 @@ public class SplitStringUtilities {
                 isTextBefore = false;
                 isTextAfter = false;
                 isSpace = false;
+                isDoubleComma =false;
+
 
 
                 index++;
+
 
 
 
