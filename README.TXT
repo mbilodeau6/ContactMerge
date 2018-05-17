@@ -1,7 +1,1 @@
-Testing
-
-This is basically what the app is.
-
-https://i.imgur.com/JbnQFUh.gif
-
--Wilkinson trying to change the readme.
+This is a fork of CodeForTucson/ContactMerge which is a project I (Michael Bilodeau) started in order to give the CodeForTucson group a concrete task to work on together. The requirements for this project are coming from some work I'm doing as a volunteer for a local non-profit. In order to meet the non-profits short term needs, I need to move the project along faster than we are able to as a CodeForTucson group. My hope is that the CodeForTucson/ContactMerge project will eventually exceed the capabilities of the code I produce on this fork so that the fork can be deleted.
