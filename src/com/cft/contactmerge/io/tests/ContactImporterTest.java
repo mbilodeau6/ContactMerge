@@ -1,4 +1,4 @@
-package com.cft.contactmerge.tests;
+package com.cft.contactmerge.io.tests;
 
 import org.junit.jupiter.api.Test;
 

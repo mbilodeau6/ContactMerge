@@ -6,7 +6,7 @@ import com.cft.contactmerge.ContactMatchType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ContactMatchResultTest {
 
@@ -67,8 +67,24 @@ class ContactMatchResultTest {
     }
 
     @Test
-    void isRelatedFound() {
-        // TODO: Add tests for isRelatedFound()
-        assertTrue(false);
+    void isRelatedFound_Yes() {
+        ContactMatchResult matchResult = new ContactMatchResult(ContactMatchType.Related);
+
+        assertEquals(AnswerType.yes, matchResult.isRelatedFound());
     }
+
+    @Test
+    void isRelatedFound_Maybe() {
+        ContactMatchResult matchResult = new ContactMatchResult(ContactMatchType.PotentiallyRelated);
+
+        assertEquals(AnswerType.maybe, matchResult.isRelatedFound());
+    }
+
+    @Test
+    void isRelatedFound_No() {
+        ContactMatchResult matchResult = new ContactMatchResult(ContactMatchType.Match);
+
+        assertEquals(AnswerType.no, matchResult.isRelatedFound());
+    }
+
 }
