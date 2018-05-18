@@ -10,6 +10,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PropertyMatchingHelpersTest {
+
+    /* --------------------------------------------------------------------------------------------
+     * Test helpers for splitPropertyString tests
+     * --------------------------------------------------------------------------------------------
+     */
+
     // from https://stackoverflow.com/questions/4930939/preferred-idiom-for-joining-a-collection-of-strings-in-java
     private String joinCollectionOfStrings(Collection<String> collection, String delimeter)
     {
@@ -27,26 +33,15 @@ class PropertyMatchingHelpersTest {
         return sb.toString();
     }
 
-    @Test
-    void splitPropertyString_EmptyString() {
-        Collection<String> parts = PropertyMatchingHelpers.splitPropertyString("");
-
-        assertEquals(0, parts.size());
+    interface SplitOperation {
+        Collection<String> operation(String testString);
     }
 
-    @Test
-    void splitPropertyString_SinglePart() {
-        Collection<String> parts = PropertyMatchingHelpers.splitPropertyString("Red");
-
-        assertEquals(1, parts.size(), "Verify parts count");
-        assertEquals("red", parts.iterator().next(), "Verify parts[0] value");
-    }
-
-    private void testSplitWithSpecificDelimeter(String delimeter) {
+    private void testSplitWithSpecificDelimeter(String delimeter, SplitOperation splitOperation) {
         Collection<String> expectedParts = Arrays.asList("Red", "Green", "Blue");
         String testString = joinCollectionOfStrings(expectedParts, delimeter);
 
-        Collection<String> parts = PropertyMatchingHelpers.splitPropertyString(testString);
+        Collection<String> parts = splitOperation.operation(testString);
 
         assertEquals(expectedParts.size(), parts.size(), "Verify part count");
 
@@ -57,103 +52,200 @@ class PropertyMatchingHelpersTest {
         }
     }
 
+    /* --------------------------------------------------------------------------------------------
+     * splitPropertyStringOnNonAlpha tests
+     * --------------------------------------------------------------------------------------------
+     */
+
     @Test
-    void splitPropertyString_MultipleParts_Spaces() {
-        testSplitWithSpecificDelimeter(" ");
+    void splitPropertyStringOnNonAlpha_EmptyString() {
+        Collection<String> parts = PropertyMatchingHelpers.splitPropertyStringOnNonAlpha("");
+
+        assertEquals(0, parts.size());
     }
 
     @Test
-    void splitPropertyString_MultipleParts_MultipleSpaces() {
-        testSplitWithSpecificDelimeter("    ");
+    void splitPropertyStringOnNonAlpha_SinglePart() {
+        Collection<String> parts = PropertyMatchingHelpers.splitPropertyStringOnNonAlpha("Red");
+
+        assertEquals(1, parts.size(), "Verify parts count");
+        assertEquals("red", parts.iterator().next(), "Verify parts[0] value");
+    }
+
+
+    @Test
+    void splitPropertyStringOnNonAlpha_MultipleParts_Spaces() {
+        testSplitWithSpecificDelimeter(" ", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
     }
 
     @Test
-    void splitPropertyString_MultipleParts_Tabs() {
-        testSplitWithSpecificDelimeter("\t");
+    void splitPropertyStringOnNonAlpha_MultipleParts_MultipleSpaces() {
+        testSplitWithSpecificDelimeter("    ", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
     }
 
     @Test
-    void splitPropertyString_MultipleParts_Hyphen() {
-        testSplitWithSpecificDelimeter("-");
+    void splitPropertyStringOnNonAlpha_MultipleParts_Tabs() {
+        testSplitWithSpecificDelimeter("\t", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
     }
 
     @Test
-    void splitPropertyString_MultipleParts_Period() {
-        testSplitWithSpecificDelimeter(".");
+    void splitPropertyStringOnNonAlpha_MultipleParts_Hyphen() {
+        testSplitWithSpecificDelimeter("-", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
     }
 
     @Test
-    void splitPropertyString_MultipleParts_Comma() {
-        testSplitWithSpecificDelimeter(",");
+    void splitPropertyStringOnNonAlpha_MultipleParts_Period() {
+        testSplitWithSpecificDelimeter(".", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
     }
 
     @Test
-    void splitPropertyString_MultipleParts_Numeral() {
-        testSplitWithSpecificDelimeter("2");
+    void splitPropertyStringOnNonAlpha_MultipleParts_Comma() {
+        testSplitWithSpecificDelimeter(",", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
     }
 
     @Test
-    void splitPropertyString_MultipleParts_Apostrophe() {
-        testSplitWithSpecificDelimeter("'");
+    void splitPropertyStringOnNonAlpha_MultipleParts_Numeral() {
+        testSplitWithSpecificDelimeter("2", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
     }
 
     @Test
-    void splitPropertyString_MultipleParts_MultipleDelimeters() {
-        Collection<String> parts = PropertyMatchingHelpers.splitPropertyString("--Red100Green   Blue:");
+    void splitPropertyStringOnNonAlpha_MultipleParts_Apostrophe() {
+        testSplitWithSpecificDelimeter("'", PropertyMatchingHelpers::splitPropertyStringOnNonAlpha);
+    }
+
+    @Test
+    void splitPropertyStringOnNonAlpha_MultipleParts_MultipleDelimeters() {
+        Collection<String> parts = PropertyMatchingHelpers.splitPropertyStringOnNonAlpha("--Red100Green   Blue:");
 
         assertEquals(3, parts.size(), "Verify parts count");
         assertEquals("red", parts.iterator().next(), "Verify parts[0] value");
     }
 
+    /* --------------------------------------------------------------------------------------------
+     * splitPropertyStringOnNonAlphaNumeric tests
+     * --------------------------------------------------------------------------------------------
+     */
     @Test
-    void doPropertyPartsMatch_Multiple_No() {
-        Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
-        Collection<String> collection2 = Arrays.asList("Yellow", "Orange");
-
-        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatch(collection1, collection2));
+    void splitPropertyStringOnNonAlphaNumeric_MultipleParts_Spaces() {
+        testSplitWithSpecificDelimeter(" ", PropertyMatchingHelpers::splitPropertyStringOnNonAlphaNumeric);
     }
 
     @Test
-    void doPropertyPartsMatch_Multiple_No_EmptySourceCollection() {
+    void splitPropertyStringOnNonAlphaNumeric_MultipleParts_Comma() {
+        testSplitWithSpecificDelimeter(",", PropertyMatchingHelpers::splitPropertyStringOnNonAlphaNumeric);
+    }
+
+    @Test
+    void splitPropertyStringOnNonAlphaNumeric_DoesNotSplitNumeral() {
+        Collection<String> parts = PropertyMatchingHelpers.splitPropertyStringOnNonAlphaNumeric("123 Main St");
+
+        assertEquals(3, parts.size(), "Verify parts count");
+        assertEquals("123", parts.iterator().next(), "Verify parts[0] value");
+    }
+
+    /* --------------------------------------------------------------------------------------------
+     * doPropertyPartsMatchOrderDoesNotMatter tests
+     * --------------------------------------------------------------------------------------------
+     */
+
+    @Test
+    void doPropertyPartsMatchOrderDoesNotMatter_Multiple_No() {
+        Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
+        Collection<String> collection2 = Arrays.asList("Yellow", "Orange");
+
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(collection1, collection2));
+    }
+
+    @Test
+    void doPropertyPartsMatchOrderDoesNotMatter_Multiple_No_EmptySourceCollection() {
         Collection<String> collection1 = new ArrayList<String>();
         Collection<String> collection2 = Arrays.asList("Yellow", "Orange");
 
-        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatch(collection1, collection2));
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(collection1, collection2));
     }
 
     @Test
-    void doPropertyPartsMatch_Multiple_No_EmptyTargetCollection() {
+    void doPropertyPartsMatchOrderDoesNotMatter_Multiple_No_EmptyTargetCollection() {
         Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
         Collection<String> collection2 = new ArrayList<String>();
 
-        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatch(collection1, collection2));
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(collection1, collection2));
     }
 
     @Test
-    void doPropertyPartsMatch_Multiple_Yes() {
+    void doPropertyPartsMatchOrderDoesNotMatter_Multiple_Yes() {
         Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
         Collection<String> collection2 = Arrays.asList("Yellow", "Green");
 
-        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doPropertyPartsMatch(collection1, collection2));
+        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(collection1, collection2));
     }
 
     @Test
-    void doPropertyPartsMatch_Multiple_Maybe() {
+    void doPropertyPartsMatchOrderDoesNotMatter_Multiple_Maybe() {
         Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
         Collection<String> collection2 = Arrays.asList("Yellow", "Orange", "Purple", "Red");
 
-        assertEquals(AnswerType.maybe, PropertyMatchingHelpers.doPropertyPartsMatch(collection1, collection2));
+        assertEquals(AnswerType.maybe, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(collection1, collection2));
     }
 
     @Test
-    void doPropertyPartsMatch_Single_No() {
-        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatch("Do", "Doe"));
+    void doPropertyPartsMatchOrderDoesNotMatter_Single_No() {
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter("Do", "Doe"));
     }
 
     @Test
-    void doPropertyPartsMatch_Single_Yes() {
-        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doPropertyPartsMatch("doe", "DOE"));
+    void doPropertyPartsMatchOrderDoesNotMatter_Single_Yes() {
+        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter("doe", "DOE"));
     }
+
+    /* --------------------------------------------------------------------------------------------
+     * doPropertyPartsMatchOrderDoesNotMatter tests
+     * --------------------------------------------------------------------------------------------
+     */
+    @Test
+    void doPropertyPartsMatchOrderDoesMatter_No_DifferentOrder() {
+        Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
+        Collection<String> collection2 = Arrays.asList("Red", "Blue", "Green");
+
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesMatter(collection1, collection2));
+    }
+
+    @Test
+    void doPropertyPartsMatchOrderDoesMatter_No_SourceSizeGreater() {
+        Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
+        Collection<String> collection2 = Arrays.asList("Red", "Green");
+
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesMatter(collection1, collection2));
+    }
+
+    @Test
+    void doPropertyPartsMatchOrderDoesMatter_No_TargetSizeGreater() {
+        Collection<String> collection1 = Arrays.asList("Red", "Green");
+        Collection<String> collection2 = Arrays.asList("Red", "Green", "Blue");
+
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesMatter(collection1, collection2));
+    }
+
+    @Test
+    void doPropertyPartsMatchOrderDoesMatter_No_EmptyIsNotMatching() {
+        Collection<String> collection1 = new ArrayList<String>();
+        Collection<String> collection2 = new ArrayList<String>();
+
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesMatter(collection1, collection2));
+    }
+
+    @Test
+    void doPropertyPartsMatchOrderDoesMatter_Yes() {
+        Collection<String> collection1 = Arrays.asList("Red", "Green", "Blue");
+        Collection<String> collection2 = Arrays.asList("Red", "Green", "Blue");
+
+        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesMatter(collection1, collection2));
+    }
+
+    /* --------------------------------------------------------------------------------------------
+     * doesInitialMatch tests
+     * --------------------------------------------------------------------------------------------
+     */
 
     @Test
     void doesInitialMatchWithName_True() {
@@ -164,6 +256,11 @@ class PropertyMatchingHelpersTest {
     void doesInitialMatchWithName_False() {
         assertFalse(PropertyMatchingHelpers.doesInitialMatchWithName('o', "Doe"));
     }
+
+    /* --------------------------------------------------------------------------------------------
+     * doNamePartsMatch tests
+     * --------------------------------------------------------------------------------------------
+     */
 
     @Test
     void doNamePartsMatch_Yes_Equal() {
