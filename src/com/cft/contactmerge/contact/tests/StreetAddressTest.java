@@ -16,7 +16,7 @@ class StreetAddressTest {
     }
 
     @Test
-    void StreetAddress_isMatch_Yes_Equal() {
+    void isMatch_Yes_Equal() {
         StreetAddress source = new StreetAddress("123 Main St");
         StreetAddress target = new StreetAddress("123 Main St");
 
@@ -24,7 +24,7 @@ class StreetAddressTest {
     }
 
     @Test
-    void StreetAddress_isMatch_No() {
+    void isMatch_No() {
         StreetAddress source = new StreetAddress("123 Main St");
         StreetAddress target = new StreetAddress("132 Main St");
 
@@ -45,42 +45,42 @@ class StreetAddressTest {
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingStreet() {
+    void isMatch_Maybe_MissingStreet() {
         testMissingStreetType("St");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingAvenue() {
+    void isMatch_Maybe_MissingAvenue() {
         testMissingStreetType("ave");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDrive() {
+    void isMatch_Maybe_MissingDrive() {
         testMissingStreetType("DR");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingLane() {
+    void isMatch_Maybe_MissingLane() {
         testMissingStreetType("Ln");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingTrail() {
+    void isMatch_Maybe_MissingTrail() {
         testMissingStreetType("Trl");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingCircle() {
+    void isMatch_Maybe_MissingCircle() {
         testMissingStreetType("cir");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingBoulevard() {
+    void isMatch_Maybe_MissingBoulevard() {
         testMissingStreetType("blvd");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingRoad() {
+    void isMatch_Maybe_MissingRoad() {
         testMissingStreetType("rd");
     }
 
@@ -98,42 +98,42 @@ class StreetAddressTest {
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionW() {
+    void isMatch_Maybe_MissingDirectionW() {
         testMissingDirection("W");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionE() {
+    void isMatch_Maybe_MissingDirectionE() {
         testMissingDirection("E");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionN() {
+    void isMatch_Maybe_MissingDirectionN() {
         testMissingDirection("N");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionNW() {
+    void isMatch_Maybe_MissingDirectionNW() {
         testMissingDirection("NW");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionNE() {
+    void isMatch_Maybe_MissingDirectionNE() {
         testMissingDirection("NE");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionS() {
+    void isMatch_Maybe_MissingDirectionS() {
         testMissingDirection("S");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionSE() {
+    void isMatch_Maybe_MissingDirectionSE() {
         testMissingDirection("SE");
     }
 
     @Test
-    void StreetAddress_isMatch_Maybe_MissingDirectionSW() {
+    void isMatch_Maybe_MissingDirectionSW() {
         testMissingDirection("SW");
     }
 }

@@ -23,10 +23,10 @@ public class Name implements IContactProperty<Name>
         this.lastName = lastName;
     }
 
-    public AnswerType isMatch(IContactProperty<Name> otherProperty) {
+    public AnswerType isMatch(IContactProperty<Name> otherName) {
 
-        IContactProperty<String> firstNameToCompareWith = otherProperty.getValue().getFirstName();
-        IContactProperty<String> lastNameToCompareWith = otherProperty.getValue().getLastName();
+        IContactProperty<String> firstNameToCompareWith = otherName.getValue().getFirstName();
+        IContactProperty<String> lastNameToCompareWith = otherName.getValue().getLastName();
 
         switch (lastName.isMatch(lastNameToCompareWith))
         {

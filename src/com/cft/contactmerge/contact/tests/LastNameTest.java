@@ -16,7 +16,7 @@ class LastNameTest {
     }
 
     @Test
-    void LastName_isMatch_Yes_Equal() {
+    void isMatch_Yes_Equal() {
         LastName source = new LastName("ADAMS");
         LastName target = new LastName("Adams");
 
@@ -24,7 +24,7 @@ class LastNameTest {
     }
 
     @Test
-    void LastName_isMatch_Maybe_ShortPartMatch() {
+    void isMatch_Maybe_ShortPartMatch() {
         LastName source = new LastName("Adams Doe");
         LastName target = new LastName("Doe");
 
@@ -32,7 +32,7 @@ class LastNameTest {
     }
 
     @Test
-    void LastName_isMatch_No() {
+    void isMatch_No() {
         LastName source = new LastName("Adamson");
         LastName target = new LastName("Adam");
 

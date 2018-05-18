@@ -15,7 +15,7 @@ class FirstNameTest {
     }
 
     @Test
-    void FirstName_isMatch_Yes_Equal() {
+    void isMatch_Yes_Equal() {
         FirstName source = new FirstName("Joe");
         FirstName target = new FirstName("JOE");
 
@@ -23,7 +23,7 @@ class FirstNameTest {
     }
 
     @Test
-    void FirstName_isMatch_Maybe_ShortPartMatch() {
+    void isMatch_Maybe_ShortPartMatch() {
         FirstName source = new FirstName("Mary Joe");
         FirstName target = new FirstName("JOE");
 
@@ -31,7 +31,7 @@ class FirstNameTest {
     }
 
     @Test
-    void FirstName_isMatch_No() {
+    void isMatch_No() {
         FirstName source = new FirstName("Kathleen");
         FirstName target = new FirstName("Lee");
 
