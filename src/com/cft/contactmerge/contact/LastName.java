@@ -2,17 +2,22 @@ package com.cft.contactmerge.contact;
 
 import com.cft.contactmerge.AnswerType;
 
-public class LastNameProperty implements IContactProperty<String> {
+import java.util.Collection;
+
+public class LastName implements IContactProperty<String> {
     private String lastName;
 
-    public LastNameProperty(String lastName)
+    public LastName(String lastName)
     {
+        if (lastName == null || lastName.isEmpty()) {
+            throw new IllegalArgumentException("lastName is required");
+        }
+
         this.lastName = lastName;
     }
 
     public AnswerType isMatch(IContactProperty<String> otherProperty) {
-        // TODO: Add code to return appropriate response
-        return null;
+        return PropertyMatchingHelpers.doNamePartsMatch(this.lastName, otherProperty.getValue());
     }
 
     public String getValue()

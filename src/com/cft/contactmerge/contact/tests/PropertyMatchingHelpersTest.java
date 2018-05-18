@@ -164,4 +164,27 @@ class PropertyMatchingHelpersTest {
     void doesInitialMatchWithName_False() {
         assertFalse(PropertyMatchingHelpers.doesInitialMatchWithName('o', "Doe"));
     }
+
+    @Test
+    void doNamePartsMatch_Yes_Equal() {
+        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doNamePartsMatch("Adams", "ADAMS"));
+    }
+
+    @Test
+    void doNamePartsMatch_isMatch_Yes_LongPartMatch() {
+        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doNamePartsMatch("D'Onofio", "D Onofio"));
+    }
+
+    @Test
+    void doNamePartsMatch_isMatch_Maybe_ShortPartMatch() {
+        assertEquals(AnswerType.maybe, PropertyMatchingHelpers.doNamePartsMatch("JOE", "Mary Joe"));
+    }
+
+    @Test
+    void doNamePartsMatch_isMatch_No() {
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doNamePartsMatch("Lee", "Kathleen"));
+    }
+
+
+
 }

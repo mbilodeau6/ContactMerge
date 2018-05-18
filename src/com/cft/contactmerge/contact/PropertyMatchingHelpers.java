@@ -44,4 +44,16 @@ public class PropertyMatchingHelpers {
 
         return name.length() > 0 && name.toLowerCase().charAt(0) == Character.toLowerCase(initial);
     }
+
+    public static AnswerType doNamePartsMatch(String namePartSource, String namePartTarget) {
+        if (PropertyMatchingHelpers.doPropertyPartsMatch(namePartSource, namePartTarget) == AnswerType.yes)
+        {
+            return AnswerType.yes;
+        }
+
+        Collection<String> sourceParts = PropertyMatchingHelpers.splitPropertyString(namePartSource);
+        Collection<String> targetParts = PropertyMatchingHelpers.splitPropertyString(namePartTarget);
+
+        return PropertyMatchingHelpers.doPropertyPartsMatch(sourceParts, targetParts);
+    }
 }
