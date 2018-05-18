@@ -15,7 +15,7 @@ public class GeneralProperty implements IContactProperty<String> {
     }
 
     public AnswerType isMatch(IContactProperty<String> otherProperty) {
-        return PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(this.value, otherProperty.getValue());
+        return PropertyMatchingHelpers.doPropertyPartsMatch(this.value, otherProperty.getValue());
     }
 
     public String getValue()

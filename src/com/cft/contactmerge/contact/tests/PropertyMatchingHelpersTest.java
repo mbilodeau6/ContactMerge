@@ -190,12 +190,12 @@ class PropertyMatchingHelpersTest {
 
     @Test
     void doPropertyPartsMatchOrderDoesNotMatter_Single_No() {
-        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter("Do", "Doe"));
+        assertEquals(AnswerType.no, PropertyMatchingHelpers.doPropertyPartsMatch("Do", "Doe"));
     }
 
     @Test
     void doPropertyPartsMatchOrderDoesNotMatter_Single_Yes() {
-        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter("doe", "DOE"));
+        assertEquals(AnswerType.yes, PropertyMatchingHelpers.doPropertyPartsMatch("doe", "DOE"));
     }
 
     /* --------------------------------------------------------------------------------------------
