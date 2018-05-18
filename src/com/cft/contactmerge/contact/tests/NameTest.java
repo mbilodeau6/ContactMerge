@@ -14,88 +14,103 @@ import com.cft.contactmerge.contact.*;
 
 class NameTest {
 
-    private String createVerificationMessage(String itemName)
+    private IContactProperty<String> createMockNamePart(String name)
     {
-        return "Verify " + itemName;
+        IContactProperty<String> namePartMock = mock(IContactProperty.class);
+        when(namePartMock.getValue()).thenReturn(name);
+
+        return namePartMock;
     }
 
+    /* -------------------------------------------------------------------------------------
+     * Constructor Tests
+     * -------------------------------------------------------------------------------------
+     */
     @Test
-    void NameProperty_Constructor()
+    void Constructor()
     {
-        Name property = new Name(new LastNameProperty("Doe"), new FirstNameProperty("Jane"));
+        Name property = new Name(createMockNamePart("Doe"), createMockNamePart("Jane"));
 
         assertNotNull(property);
     }
 
     @Test
-    void NameProperty_getValue() {
-        Name property = new Name(new LastNameProperty("Doe"), new FirstNameProperty("Jane"));
+    void Constructor_NullLastName()
+    {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Name(null, createMockNamePart("Jane")));
+    }
 
-        assertEquals("Jane", property.getValue().getFirstName().getValue(), createVerificationMessage("FirstName"));
-        assertEquals("Doe", property.getValue().getLastName().getValue(), createVerificationMessage("LastName"));
+    @Test
+    void Constructor_NullFirstName()
+    {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Name(createMockNamePart("Doe"), null));
+    }
+
+    /* -------------------------------------------------------------------------------------
+     * Tests for retrieving contents of the Name property
+     * -------------------------------------------------------------------------------------
+     */
+    @Test
+    void NameProperty_getValue() {
+        IContactProperty<String> mockLastName = createMockNamePart("Doe");
+        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
+
+        Name property = new Name(mockLastName, mockFirstName);
+
+        assertEquals(mockFirstName, property.getValue().getFirstName(), "Verify FirstName");
+        assertEquals(mockLastName, property.getValue().getLastName(), "Verify LastName");
     }
 
     @Test
     void NameProperty_toString() {
-        Name property = new Name(new LastNameProperty("Doe"), new FirstNameProperty("Jane"));
+        IContactProperty<String> mockLastName = createMockNamePart("Doe");
+        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
+
+        Name property = new Name(mockLastName, mockFirstName);
 
         assertEquals("Doe, Jane", property.toString());
     }
 
     @Test
     void NameProperty_getFirstName() {
-        Name property = new Name(new LastNameProperty("Doe"), new FirstNameProperty("Jane"));
+        IContactProperty<String> mockLastName = createMockNamePart("Doe");
+        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
 
-        assertEquals("Jane", property.getFirstName().getValue());
+        Name property = new Name(mockLastName, mockFirstName);
+
+        assertEquals(mockFirstName, property.getFirstName());
     }
 
     @Test
     void NameProperty_getLastName() {
-        Name property = new Name(new LastNameProperty("Doe"), new FirstNameProperty("Jane"));
+        IContactProperty<String> mockLastName = createMockNamePart("Doe");
+        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
 
-        assertEquals("Doe", property.getLastName().getValue());
+        Name property = new Name(mockLastName, mockFirstName);
+
+        assertEquals(mockLastName, property.getLastName());
     }
 
-    // The following code creates a Name object that is built on mock parts so that we
-    // can fully test the isMatch() logic. You use it by creating a Name with 
-    // createNameWithMockedInternals() and then make sure all of the mocks were called
-    // by calling verifyExpectedNamePartsCalled().
-    private class NameWithMockedParts {
-        public Name name;
-        public IContactProperty firstNameMock;
-        public IContactProperty lastNameMock;
-    }
-
-    private NameWithMockedParts createNameWithMockedInternals(AnswerType lastNameIsMatch, AnswerType firstNameIsMatch)
-    {
-        NameWithMockedParts nameMock = new NameWithMockedParts();
-
-        nameMock.firstNameMock = mock(IContactProperty.class);
-        when(nameMock.firstNameMock.isMatch(any())).thenReturn(firstNameIsMatch);
-
-        nameMock.lastNameMock = mock(IContactProperty.class);
-        when(nameMock.lastNameMock.isMatch(any())).thenReturn(lastNameIsMatch);
-
-        nameMock.name = new Name(nameMock.lastNameMock, nameMock.firstNameMock);
-
-        return nameMock;
-    }
-
-    private void verifyExpectedNamePartsCalled(NameWithMockedParts nameMock, boolean verifyIsMatchCalledOnFirstName)
-    {
-        verify(nameMock.lastNameMock).isMatch(any());
-
-        if (verifyIsMatchCalledOnFirstName) {
-            verify(nameMock.firstNameMock).isMatch(any());
-        }
-    }
+    /* ----------------------------------------------------------------------------------
+     * Remainging code/tests are for isMatch() testing
+     * ----------------------------------------------------------------------------------
+     */
 
     // Creates a stub so that isMatch() can execute. The Name object will never actually compare
     // its parts with this object.
     private IContactProperty<Name> createNameStub()
     {
+
+        IContactProperty<String> lastNameMock = mock(IContactProperty.class);
+        when(lastNameMock.getValue()).thenReturn("This is where you would find LastName value");
+
+        IContactProperty<String> firstNameMock = mock(IContactProperty.class);
+        when(firstNameMock.getValue()).thenReturn("This is where you would find FirstName value");
+
         IContactProperty<Name> nameToCompareWith = mock(IContactProperty.class);
-        when(nameToCompareWith.getValue()).thenReturn(new Name(null, null));
+        when(nameToCompareWith.getValue()).thenReturn(new Name( lastNameMock, firstNameMock));
 
         return nameToCompareWith;
     }
@@ -106,12 +121,26 @@ class NameTest {
                                 AnswerType answerTypeForFirstNameIsMatch,
                                 AnswerType expectedAnswerType)
     {
-        NameWithMockedParts nameToCompareMock = createNameWithMockedInternals(answerTypeForLastNameIsMatch, answerTypeForFirstNameIsMatch);
+        // Set up Name with mock internals
+        IContactProperty lastNameMock = mock(IContactProperty.class);
+        when(lastNameMock.isMatch(any())).thenReturn(answerTypeForLastNameIsMatch);
 
-        assertEquals(expectedAnswerType, nameToCompareMock.name.isMatch(createNameStub()));
+        IContactProperty firstNameMock = mock(IContactProperty.class);
+        when(firstNameMock.isMatch(any())).thenReturn(answerTypeForFirstNameIsMatch);
+
+        Name nameWithMockInternals = new Name(lastNameMock, firstNameMock);
+
+        // Run test
+        assertEquals(expectedAnswerType, nameWithMockInternals.isMatch(createNameStub()));
+
+        // Verify expected internals were called
+        verify(lastNameMock).isMatch(any());
 
         boolean isCheckRequiredOnFirstName = (answerTypeForLastNameIsMatch != AnswerType.no);
-        verifyExpectedNamePartsCalled(nameToCompareMock, isCheckRequiredOnFirstName);
+
+        if (isCheckRequiredOnFirstName) {
+            verify(firstNameMock).isMatch(any());
+        }
     }
 
     // The actual isMatch tests
@@ -159,5 +188,4 @@ class NameTest {
     void NameProperty_isMatchWhenLastNameNoAndFirstNameNo() {
         runIsMatchTest(AnswerType.no, AnswerType.no, AnswerType.no);
     }
-
 }

@@ -11,6 +11,14 @@ public class Name implements IContactProperty<Name>
 
     public Name(IContactProperty<String> lastName, IContactProperty<String> firstName)
     {
+        if (lastName == null) {
+            throw new IllegalArgumentException("LastName is required");
+        }
+
+        if (firstName == null) {
+            throw new IllegalArgumentException("FirstName is required");
+        }
+
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -39,7 +47,7 @@ public class Name implements IContactProperty<Name>
     }
 
     public String toString() {
-        return lastName + ", " + firstName;
+        return lastName.getValue() + ", " + firstName.getValue();
     }
 
     public IContactProperty<String> getFirstName()
