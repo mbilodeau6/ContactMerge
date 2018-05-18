@@ -12,20 +12,7 @@ class LastNameTest {
     void Constructor()
     {
         LastName property = new LastName("Smith");
-
-        assertNotNull(property);
-    }
-
-    @Test
-    void Constructor_NullValue()
-    {
-        assertThrows(IllegalArgumentException.class, () -> new LastName(null));
-    }
-
-    @Test
-    void Constructor_EmptyValue()
-    {
-        assertThrows(IllegalArgumentException.class, () -> new LastName(""));
+        assertEquals("Smith", property.toString());
     }
 
     @Test
@@ -50,19 +37,5 @@ class LastNameTest {
         LastName target = new LastName("Adam");
 
         assertEquals(AnswerType.no, source.isMatch(target));
-    }
-
-    @Test
-    void LastName_getValue() {
-        LastName property = new LastName("Smith");
-
-        assertEquals("Smith", property.getValue());
-    }
-
-    @Test
-    void LastName_toString() {
-        LastName property = new LastName("Smith");
-
-        assertEquals("Smith", property.toString());
     }
 }

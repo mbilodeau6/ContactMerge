@@ -5,9 +5,7 @@ import com.cft.contactmerge.AnswerType;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class StreetAddress implements IContactProperty<String> {
-    private String streetAddress;
-
+public class StreetAddress extends GeneralProperty {
     private static Collection<String> addressDirections = Arrays.asList("n", "w", "e", "s", "ne", "nw", "se", "sw");
     private static Collection<String> streetTypes = Arrays.asList("st", "ave", "dr", "ln", "trl", "cir", "blvd", "rd");
 
@@ -21,22 +19,19 @@ public class StreetAddress implements IContactProperty<String> {
 
     public StreetAddress(String streetAddress)
     {
-        if (streetAddress == null || streetAddress.isEmpty()) {
-            throw new IllegalArgumentException("streetAddress is required");
-        }
-
-        this.streetAddress = streetAddress;
+        super(streetAddress);
     }
 
+    @Override
     public AnswerType isMatch(IContactProperty<String> otherProperty) {
         // Test for exact match
-        if (PropertyMatchingHelpers.doPropertyPartsMatch(streetAddress, otherProperty.getValue()) == AnswerType.yes)
+        if (PropertyMatchingHelpers.doPropertyPartsMatch(this.getValue(), otherProperty.getValue()) == AnswerType.yes)
         {
             return AnswerType.yes;
         }
 
         // Test for parts matching after removing commonly missed items
-        Collection<String> sourceParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlphaNumeric(streetAddress);
+        Collection<String> sourceParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlphaNumeric(this.getValue());
         sourceParts.removeAll(addressDirections);
         sourceParts.removeAll(streetTypes);
 
@@ -50,14 +45,4 @@ public class StreetAddress implements IContactProperty<String> {
 
         return AnswerType.no;
     }
-
-    public String getValue()
-    {
-        return streetAddress;
-    }
-
-    public String toString() {
-        return streetAddress;
-    }
-
 }
