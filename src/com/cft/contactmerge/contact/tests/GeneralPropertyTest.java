@@ -1,17 +1,17 @@
 package com.cft.contactmerge.contact.tests;
 
 import com.cft.contactmerge.AnswerType;
-import com.cft.contactmerge.contact.Address;
+import com.cft.contactmerge.contact.GeneralProperty;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddressTest {
+class GeneralPropertyTest {
 
     @Test
     void Constructor()
     {
-        Address property = new Address("Tucson");
+        GeneralProperty property = new GeneralProperty("Tucson");
 
         assertNotNull(property);
     }
@@ -19,41 +19,41 @@ class AddressTest {
     @Test
     void Constructor_NullValue()
     {
-        assertThrows(IllegalArgumentException.class, () -> new Address(null));
+        assertThrows(IllegalArgumentException.class, () -> new GeneralProperty(null));
     }
 
     @Test
     void Constructor_EmptyValue()
     {
-        assertThrows(IllegalArgumentException.class, () -> new Address(""));
+        assertThrows(IllegalArgumentException.class, () -> new GeneralProperty(""));
     }
 
     @Test
     void GeneralProperty_isMatch_Yes_Equal() {
-        Address source = new Address("Tucson");
-        Address target = new Address("tucson");
+        GeneralProperty source = new GeneralProperty("Tucson");
+        GeneralProperty target = new GeneralProperty("tucson");
 
         assertEquals(AnswerType.yes, source.isMatch(target));
     }
 
     @Test
     void GeneralProperty_isMatch_No() {
-        Address source = new Address("Phoenix");
-        Address target = new Address("Tucson");
+        GeneralProperty source = new GeneralProperty("Phoenix");
+        GeneralProperty target = new GeneralProperty("Tucson");
 
         assertEquals(AnswerType.no, source.isMatch(target));
     }
 
     @Test
     void GeneralProperty_getValue() {
-        Address property = new Address("Tucson");
+        GeneralProperty property = new GeneralProperty("Tucson");
 
         assertEquals("Tucson", property.getValue());
     }
 
     @Test
     void GeneralProperty_toString() {
-        Address property = new Address("Tucson");
+        GeneralProperty property = new GeneralProperty("Tucson");
 
         assertEquals("Tucson", property.toString());
     }
