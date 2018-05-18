@@ -4,19 +4,29 @@ import com.cft.contactmerge.AnswerType;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 
 public class PropertyMatchingHelpers {
     private static final int MIN_PART_LENGTH_TO_MAKE_YES_MATCH = 3;
 
-    public static Collection<String> splitPropertyString(String propertyValue) {
+    private static Collection<String> splitPropertyString(String propertyValue, String splitRegEx) {
         assert(propertyValue != null);
+        assert(splitRegEx != null);
 
-        return Arrays.asList(propertyValue.split("[^a-zA-Z]")).stream()
+        return Arrays.asList(propertyValue.split(splitRegEx)).stream()
                 .filter(x -> !x.isEmpty()).map(x -> x.toLowerCase()).collect(Collectors.toList());
     }
 
-    public static AnswerType doPropertyPartsMatch(Collection<String> sourceCollection, Collection<String> targetCollection) {
+    public static Collection<String> splitPropertyStringOnNonAlpha(String propertyValue) {
+        return splitPropertyString(propertyValue, "[^a-zA-Z]");
+    }
+
+    public static Collection<String> splitPropertyStringOnNonAlphaNumeric(String propertyValue) {
+        return splitPropertyString(propertyValue, "[^a-zA-Z0-9]");
+    }
+
+    public static AnswerType doPropertyPartsMatchOrderDoesNotMatter(Collection<String> sourceCollection, Collection<String> targetCollection) {
         assert(sourceCollection != null);
         assert(targetCollection != null);
 
@@ -32,7 +42,27 @@ public class PropertyMatchingHelpers {
                 (maxFoundLength > MIN_PART_LENGTH_TO_MAKE_YES_MATCH ? AnswerType.yes : AnswerType.maybe);
     }
 
-    public static AnswerType doPropertyPartsMatch(String sourceString, String targetString) {
+    public static AnswerType doPropertyPartsMatchOrderDoesMatter(Collection<String> sourceCollection, Collection<String> targetCollection) {
+        assert(sourceCollection != null);
+        assert(targetCollection != null);
+
+        if (sourceCollection.size() != targetCollection.size() || sourceCollection.size() == 0) {
+            return AnswerType.no;
+        }
+
+        Iterator<String> sourceIterator = sourceCollection.iterator();
+        Iterator<String> targetIterator = targetCollection.iterator();
+
+        while(sourceIterator.hasNext()) {
+            if (PropertyMatchingHelpers.doNamePartsMatch(sourceIterator.next(), targetIterator.next()) != AnswerType.yes) {
+                return AnswerType.no;
+            }
+        }
+
+        return AnswerType.yes;
+    }
+
+    public static AnswerType doPropertyPartsMatchOrderDoesNotMatter(String sourceString, String targetString) {
         assert(sourceString != null);
         assert(targetString!= null);
 
@@ -46,14 +76,14 @@ public class PropertyMatchingHelpers {
     }
 
     public static AnswerType doNamePartsMatch(String namePartSource, String namePartTarget) {
-        if (PropertyMatchingHelpers.doPropertyPartsMatch(namePartSource, namePartTarget) == AnswerType.yes)
+        if (PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(namePartSource, namePartTarget) == AnswerType.yes)
         {
             return AnswerType.yes;
         }
 
-        Collection<String> sourceParts = PropertyMatchingHelpers.splitPropertyString(namePartSource);
-        Collection<String> targetParts = PropertyMatchingHelpers.splitPropertyString(namePartTarget);
+        Collection<String> sourceParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlpha(namePartSource);
+        Collection<String> targetParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlpha(namePartTarget);
 
-        return PropertyMatchingHelpers.doPropertyPartsMatch(sourceParts, targetParts);
+        return PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(sourceParts, targetParts);
     }
 }
