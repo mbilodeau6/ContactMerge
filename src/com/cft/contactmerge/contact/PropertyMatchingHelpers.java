@@ -62,7 +62,7 @@ public class PropertyMatchingHelpers {
         return AnswerType.yes;
     }
 
-    public static AnswerType doPropertyPartsMatchOrderDoesNotMatter(String sourceString, String targetString) {
+    public static AnswerType doPropertyPartsMatch(String sourceString, String targetString) {
         assert(sourceString != null);
         assert(targetString!= null);
 
@@ -76,7 +76,7 @@ public class PropertyMatchingHelpers {
     }
 
     public static AnswerType doNamePartsMatch(String namePartSource, String namePartTarget) {
-        if (PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(namePartSource, namePartTarget) == AnswerType.yes)
+        if (PropertyMatchingHelpers.doPropertyPartsMatch(namePartSource, namePartTarget) == AnswerType.yes)
         {
             return AnswerType.yes;
         }

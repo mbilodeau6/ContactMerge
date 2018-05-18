@@ -2,10 +2,10 @@ package com.cft.contactmerge.contact;
 
 import com.cft.contactmerge.AnswerType;
 
-public class GeneralProperty implements IContactProperty<String> {
+public class Address implements IContactProperty<String> {
     private String value;
 
-    public GeneralProperty(String value)
+    public Address(String value)
     {
         if (value == null || value.isEmpty()) {
             throw new IllegalArgumentException("Property value is required");
@@ -15,7 +15,7 @@ public class GeneralProperty implements IContactProperty<String> {
     }
 
     public AnswerType isMatch(IContactProperty<String> otherProperty) {
-        return PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(this.value, otherProperty.getValue());
+        return PropertyMatchingHelpers.doPropertyPartsMatch(this.value, otherProperty.getValue());
     }
 
     public String getValue()

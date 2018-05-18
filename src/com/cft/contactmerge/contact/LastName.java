@@ -7,6 +7,11 @@ import java.util.Collection;
 public class LastName implements IContactProperty<String> {
     private String lastName;
 
+    // TODO: This code assumes that names will be normalized before being compared. Normalization
+    // should probably be part of construction. Things that should happen as part of normalization:
+    // 1. Strip out punctuation and unnecessary spaces
+    // 2. Normalize capitalization
+
     public LastName(String lastName)
     {
         if (lastName == null || lastName.isEmpty()) {
