@@ -10,7 +10,7 @@ public class LastNameProperty implements IContactProperty<String> {
         this.lastName = lastName;
     }
 
-    public AnswerType isMatch(String otherProperty) {
+    public AnswerType isMatch(IContactProperty<String> otherProperty) {
         // TODO: Add code to return appropriate response
         return null;
     }

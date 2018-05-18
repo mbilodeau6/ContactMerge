@@ -11,15 +11,12 @@ public class FirstNameProperty implements IContactProperty<String> {
         this.firstName = firstName;
     }
 
-    public AnswerType isMatch(String otherProperty) {
+    public AnswerType isMatch(IContactProperty<String> otherProperty) {
         // TODO: Add code to return appropriate response
         return null;
     }
 
-    public String getValue()
-    {
-        return firstName;
-    }
+    public String getValue() { return firstName; }
 
     public String toString() {
         return firstName;
