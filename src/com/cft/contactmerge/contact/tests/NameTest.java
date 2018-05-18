@@ -53,7 +53,7 @@ class NameTest {
      * -------------------------------------------------------------------------------------
      */
     @Test
-    void NameProperty_getValue() {
+    void Name_getValue() {
         IContactProperty<String> mockLastName = createMockNamePart("Doe");
         IContactProperty<String> mockFirstName = createMockNamePart("Jane");
 
@@ -64,7 +64,7 @@ class NameTest {
     }
 
     @Test
-    void NameProperty_toString() {
+    void Name_toString() {
         IContactProperty<String> mockLastName = createMockNamePart("Doe");
         IContactProperty<String> mockFirstName = createMockNamePart("Jane");
 
@@ -74,7 +74,7 @@ class NameTest {
     }
 
     @Test
-    void NameProperty_getFirstName() {
+    void Name_getFirstName() {
         IContactProperty<String> mockLastName = createMockNamePart("Doe");
         IContactProperty<String> mockFirstName = createMockNamePart("Jane");
 
@@ -84,7 +84,7 @@ class NameTest {
     }
 
     @Test
-    void NameProperty_getLastName() {
+    void Name_getLastName() {
         IContactProperty<String> mockLastName = createMockNamePart("Doe");
         IContactProperty<String> mockFirstName = createMockNamePart("Jane");
 
@@ -145,47 +145,47 @@ class NameTest {
 
     // The actual isMatch tests
     @Test
-    void NameProperty_isMatchWhenLastNameYesAndFirstNameYes() {
+    void Name_isMatchWhenLastNameYesAndFirstNameYes() {
         runIsMatchTest(AnswerType.yes, AnswerType.yes, AnswerType.yes);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameYesAndFirstNameMaybe() {
+    void Name_isMatchWhenLastNameYesAndFirstNameMaybe() {
         runIsMatchTest(AnswerType.yes, AnswerType.maybe, AnswerType.maybe);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameYesAndFirstNameNo() {
+    void Name_isMatchWhenLastNameYesAndFirstNameNo() {
         runIsMatchTest(AnswerType.yes, AnswerType.no, AnswerType.no);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameMaybeAndFirstNameYes() {
+    void Name_isMatchWhenLastNameMaybeAndFirstNameYes() {
         runIsMatchTest(AnswerType.maybe, AnswerType.yes, AnswerType.maybe);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameMaybeAndFirstNameMaybe() {
+    void Name_isMatchWhenLastNameMaybeAndFirstNameMaybe() {
         runIsMatchTest(AnswerType.maybe, AnswerType.maybe, AnswerType.maybe);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameMaybeAndFirstNameNo() {
+    void Name_isMatchWhenLastNameMaybeAndFirstNameNo() {
         runIsMatchTest(AnswerType.maybe, AnswerType.no, AnswerType.no);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameNoAndFirstNameYes() {
+    void Name_isMatchWhenLastNameNoAndFirstNameYes() {
         runIsMatchTest(AnswerType.no, AnswerType.yes, AnswerType.no);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameNoAndFirstNameMaybe() {
+    void Name_isMatchWhenLastNameNoAndFirstNameMaybe() {
         runIsMatchTest(AnswerType.no, AnswerType.yes, AnswerType.no);
     }
 
     @Test
-    void NameProperty_isMatchWhenLastNameNoAndFirstNameNo() {
+    void Name_isMatchWhenLastNameNoAndFirstNameNo() {
         runIsMatchTest(AnswerType.no, AnswerType.no, AnswerType.no);
     }
 }
