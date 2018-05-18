@@ -11,20 +11,7 @@ class FirstNameTest {
     void Constructor()
     {
         FirstName property = new FirstName("Joe");
-
-        assertNotNull(property);
-    }
-
-    @Test
-    void Constructor_NullValue()
-    {
-        assertThrows(IllegalArgumentException.class, () -> new FirstName(null));
-    }
-
-    @Test
-    void Constructor_EmptyValue()
-    {
-        assertThrows(IllegalArgumentException.class, () -> new FirstName(""));
+        assertEquals("Joe", property.getValue());
     }
 
     @Test
@@ -49,19 +36,5 @@ class FirstNameTest {
         FirstName target = new FirstName("Lee");
 
         assertEquals(AnswerType.no, source.isMatch(target));
-    }
-
-    @Test
-    void FirstName_getValue() {
-        FirstName property = new FirstName("Joe");
-
-        assertEquals("Joe", property.getValue());
-    }
-
-    @Test
-    void FirstName_toString() {
-        FirstName property = new FirstName("Joe");
-
-        assertEquals("Joe", property.toString());
     }
 }

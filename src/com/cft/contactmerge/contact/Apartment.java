@@ -2,8 +2,7 @@ package com.cft.contactmerge.contact;
 
 import com.cft.contactmerge.AnswerType;
 
-public class Apartment implements IContactProperty<String> {
-    private String apartment;
+public class Apartment extends GeneralProperty {
 
     // TODO: This code assumes that apartment names will be normalized before being compared. Normalization
     // should probably be part of construction. Things that should happen as part of normalization:
@@ -13,20 +12,6 @@ public class Apartment implements IContactProperty<String> {
 
     public Apartment(String apartment)
     {
-        if (apartment == null || apartment.isEmpty()) {
-            throw new IllegalArgumentException("apartment is required");
-        }
-
-        this.apartment = apartment;
-    }
-
-    public AnswerType isMatch(IContactProperty<String> otherProperty) {
-        return PropertyMatchingHelpers.doNamePartsMatch(this.apartment, otherProperty.getValue());
-    }
-
-    public String getValue() { return apartment; }
-
-    public String toString() {
-        return apartment;
+        super(apartment);
     }
 }
