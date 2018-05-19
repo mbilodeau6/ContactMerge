@@ -181,4 +181,16 @@ class NameTest {
     void isMatchWhenLastNameNoAndFirstNameNo() {
         runIsMatchTest(AnswerType.no, AnswerType.no, AnswerType.no);
     }
+
+    // Adding one test that uses the real internal properties to make sure everything is
+    // wired up correctly. All other isMatch() tests are using mocks.
+    @Test
+    void isMatch_Maybe_RealInternalProperties() {
+        Name sourceName = new Name(new LastName("Adams"), new FirstName("Bobby Joe"));
+
+        Name targetName = new Name(new LastName("Adams"), new FirstName("Joe"));
+
+        assertEquals(AnswerType.maybe, sourceName.isMatch(targetName));
+    }
+
 }

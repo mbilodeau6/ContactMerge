@@ -6,11 +6,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SharedTestHelpers {
-    public static IContactProperty<String> createMockContactProperty(String name)
+    public static IContactProperty<String> createMockContactProperty(String propertyValue)
     {
-        IContactProperty<String> namePartMock = mock(IContactProperty.class);
-        when(namePartMock.getValue()).thenReturn(name);
+        IContactProperty<String> contactPartMock = mock(IContactProperty.class);
+        when(contactPartMock.getValue()).thenReturn(propertyValue);
 
-        return namePartMock;
+        return contactPartMock;
     }
 }
