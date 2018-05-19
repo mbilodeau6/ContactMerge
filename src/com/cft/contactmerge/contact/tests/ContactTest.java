@@ -1,81 +1,206 @@
 package com.cft.contactmerge.contact.tests;
 
-import com.cft.contactmerge.ContactMatchType;
+import com.cft.contactmerge.AnswerType;
+import com.cft.contactmerge.contact.ContactMatchType;
 import com.cft.contactmerge.contact.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ContactTest {
+
+    @Test
+    void Constructor() {
+        Contact newContact = new Contact();
+
+        assertNotNull(newContact);
+    }
+
     @Test
     void setName() {
         Contact newContact = new Contact();
-        newContact.setName(new Name(new LastName("def"), new FirstName("abc")));
+        IContactProperty<Name> mockName = mock(Name.class);
 
-        assertEquals("abc", newContact.getName().getValue().getFirstName().getValue(), "Verify FirstName");
-        assertEquals("def", newContact.getName().getValue().getLastName().getValue(), "Verify LastName");
+        newContact.setName(mockName);
+
+        assertEquals(mockName, newContact.getName());
     }
 
-//    @Test
-//    void setAddress() {
-//        Contact newContact = new Contact();
-//        newContact.setAddress("ghi");
-//        assertEquals("ghi", newContact.getAddress());
-//    }
-//
-//    @Test
-//    void setCity() {
-//        Contact newContact = new Contact();
-//        newContact.setCity("jkl");
-//        assertEquals("jkl", newContact.getCity());
-//    }
-//
-//    @Test
-//    void setZip() {
-//        Contact newContact = new Contact();
-//        newContact.setZip("mno");
-//        assertEquals("mno", newContact.getZip());
-//    }
-//
-//    @Test
-//    void setPhone() {
-//        Contact newContact = new Contact();
-//        newContact.setPhone("pqr");
-//        assertEquals("pqr", newContact.getPhone());
-//    }
-//
-//    @Test
-//    void setEmail() {
-//        Contact newContact = new Contact();
-//        newContact.setEmail("stu");
-//        assertEquals("stu", newContact.getEmail());
-//    }
-//
-//    /* ========================================================================
-//     * There are a large number of CompareTo tests which are broken into steps
-//     * reflecting the rules used to determine if a ContactToMerge matches an
-//     * ExistingContact.
-//     * ========================================================================
-//     */
-//
-//    // Helper methods for tests
-//    private Contact createBaseContact()
-//    {
-//        Contact contact = new Contact();
-//        contact.setFirstName("John");
-//        contact.setLastName("Doe");
-//        contact.setAddress("123 Main St");
-//        contact.setCity("Tucson");
-//        contact.setState("AZ");
-//        contact.setZip("85750");
-//        contact.setPhone("(520) 123-4567");
-//        contact.setEmail("jdoe@gmail.com");
-//
-//        return contact;
-//    }
-//
+    @Test
+    void setAddress() {
+        Contact newContact = new Contact();
+        IContactProperty<Address> mockAddress = mock(Address.class);
+
+        newContact.setAddress(mockAddress);
+
+        assertEquals(mockAddress, newContact.getAddress());
+    }
+
+    @Test
+    void setPhone() {
+        Contact newContact = new Contact();
+        IContactProperty<String> mockPhoneNumber = mock(IContactProperty.class);
+
+        newContact.setPhone(mockPhoneNumber);
+
+        assertEquals(mockPhoneNumber, newContact.getPhone());
+    }
+
+    @Test
+    void setEmail() {
+        Contact newContact = new Contact();
+        IContactProperty<String> mockEmail = mock(IContactProperty.class);
+
+        newContact.setEmail(mockEmail);
+        assertEquals(mockEmail, newContact.getEmail());
+    }
+
+    /* ========================================================================
+     * There are a large number of CompareTo tests which are broken into steps
+     * reflecting the rules used to determine if a ContactToMerge matches an
+     * ExistingContact.
+     * ========================================================================
+     */
+
+    // Helper methods for tests
+    private Contact createBaseContact()
+    {
+        Contact contact = new Contact();
+        contact.setName(new Name(new FirstName("John"), new LastName("Doe")));
+        contact.setAddress(new Address(new StreetAddress("123 Main St"),
+                new GeneralProperty("Tucson"),
+                new GeneralProperty("AZ"),
+                null,
+                new GeneralProperty("85750")));
+        contact.setPhone(new PhoneNumber("(520) 123-4567"));
+        contact.setEmail(new GeneralProperty("jdoe@gmail.com"));
+
+        return contact;
+    }
+
+    // Creates a stub so that compareTo() can execute. The Contact object will never actually compare
+    // its parts with this object.
+    private IContact createContactStub(boolean addressSet, boolean phoneSet, boolean emailSet)
+    {
+        IContactProperty<Name> nameMock = mock(Name.class);
+
+        IContactProperty<Address> addressMock = null;
+
+        if (addressSet) {
+            addressMock = mock(Address.class);
+//        when(streetAddressMock.getValue()).thenReturn("This is where you would find the StreetAddress value");
+        }
+
+        IContactProperty<String> phoneMock = null;
+
+        if (phoneSet) {
+            phoneMock = mock(IContactProperty.class);
+        }
+
+        IContactProperty<String> emailMock = null;
+
+        if (emailSet) {
+            emailMock = mock(IContactProperty.class);
+        }
+
+        IContact contactToCompareWith = mock(Contact.class);
+        when(contactToCompareWith.getName()).thenReturn(nameMock);
+        when(contactToCompareWith.getAddress()).thenReturn(addressMock);
+        when(contactToCompareWith.getPhone()).thenReturn(phoneMock);
+        when(contactToCompareWith.getEmail()).thenReturn(emailMock);
+
+        return contactToCompareWith;
+    }
+
+    // Executes a specific test, verifies the result, and verifies that the internal name parts
+    // are called as expected.
+    private void runIsMatchTest(AnswerType answerTypeForNameIsMatch,
+                                AnswerType answerTypeForAddressIsMatch,
+                                AnswerType answerTypeForPhoneIsMatch,
+                                AnswerType answerTypeForEmailIsMatch,
+                                ContactMatchType expectedMatchResult,
+                                boolean targetAddressSet,
+                                boolean targetPhoneSet,
+                                boolean targetEmailSet)
+    {
+        // Set up Address with mock internals
+        IContactProperty<Name> nameMock = mock(Name.class);
+        when(nameMock.isMatch(any())).thenReturn(answerTypeForNameIsMatch);
+
+        IContactProperty<Address> addressMock = null;
+        boolean sourceAddressSet = answerTypeForAddressIsMatch != null;
+
+        if (sourceAddressSet) {
+            addressMock = mock(Address.class);
+            when(addressMock.isMatch(any())).thenReturn(answerTypeForAddressIsMatch);
+        }
+
+        IContactProperty phoneMock = null;
+        boolean sourcePhoneSet = answerTypeForPhoneIsMatch != null;
+
+        if (sourcePhoneSet) {
+            phoneMock = mock(IContactProperty.class);
+            when(phoneMock.isMatch(any())).thenReturn(answerTypeForPhoneIsMatch);
+        }
+
+        IContactProperty emailMock = null;
+        boolean sourceEmailSet = answerTypeForEmailIsMatch != null;
+
+        if (sourceEmailSet) {
+            emailMock = mock(IContactProperty.class);
+            when(emailMock.isMatch(any())).thenReturn(answerTypeForEmailIsMatch);
+        }
+
+        Contact contactWithMockInternals = new Contact();
+        // TODO: Switch to use constructor for initialization once that is set up
+        contactWithMockInternals.setName(nameMock);
+        contactWithMockInternals.setAddress(addressMock);
+        contactWithMockInternals.setPhone(phoneMock);
+        contactWithMockInternals.setEmail(emailMock);
+
+        IContact contactToComparewith = createContactStub(targetAddressSet, targetPhoneSet, targetEmailSet);
+
+        // Run test
+        ContactMatchResult result = contactWithMockInternals.compareTo(contactToComparewith);
+        assertEquals(expectedMatchResult, result.getMatchType());
+
+        // Verify expected internals were called
+        verify(nameMock).isMatch(any());
+
+        if (sourceAddressSet && targetAddressSet) {
+            verify(addressMock).isMatch(any());
+        }
+
+        if (sourcePhoneSet && targetPhoneSet) {
+            verify(phoneMock).isMatch(any());
+        }
+
+        if (sourceEmailSet && targetEmailSet) {
+            verify(emailMock).isMatch(any());
+        }
+    }
+
+    // This version does not set the target property if the corresponding source property is unset.
+    private void runIsMatchTest(AnswerType answerTypeForNameIsMatch,
+                                AnswerType answerTypeForAddressIsMatch,
+                                AnswerType answerTypeForPhoneIsMatch,
+                                AnswerType answerTypeForEmailIsMatch,
+                                ContactMatchType expectedMatchResult) {
+        runIsMatchTest(answerTypeForNameIsMatch,
+                answerTypeForAddressIsMatch,
+                answerTypeForPhoneIsMatch,
+                answerTypeForEmailIsMatch,
+                expectedMatchResult,
+                answerTypeForAddressIsMatch != null,
+                answerTypeForPhoneIsMatch != null,
+                answerTypeForEmailIsMatch != null);
+    }
+
+
 //    private Contact createNonMatchingBaseContact()
 //    {
 //        Contact contact = new Contact();
@@ -106,40 +231,37 @@ class ContactTest {
 //        targetContact.setState(sourceContact.getState());
 //        targetContact.setZip(sourceContact.getZip());
 //    }
-//
-//    // Step 1 - Return ContactMatchType.NoMatch if nothing is specified in the
-//    // ContactToMerge or the ExistingContact
-//    @Test
-//    void compareTo_NoMatch_NothingSpecifiedInContactToMerge()
-//    {
-//        Contact c1 = new Contact();
-//        Contact c2 = createBaseContact();
-//
-//        assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
-//    }
-//
-//    @Test
-//    void compareTo_NoMatch_NothingSpecifiedInExistingContact()
-//    {
-//        Contact c1 = createBaseContact();
-//        Contact c2 = new Contact();
-//
-//        assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
-//    }
+
+    // Step 1 - Return ContactMatchType.NoMatch if nothing is specified in the
+    // ContactToMerge or the ExistingContact
+    // TODO: The following tests won't be valid when Name is required
+    @Test
+    void compareTo_NoMatch_NothingSpecifiedInContactToMerge()
+    {
+        Contact c1 = new Contact();
+        Contact c2 = createBaseContact();
+
+        assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
+    }
+
+    @Test
+    void compareTo_NoMatch_NothingSpecifiedInExistingContact()
+    {
+        Contact c1 = createBaseContact();
+        Contact c2 = new Contact();
+
+        assertEquals(ContactMatchType.NoMatch, c1.compareTo(c2).getMatchType());
+    }
+
+    // Step 2 - Return ContactMatchType.Identical if all the parts that are specified in
+    // either Contact match
+    @Test
+    void compareTo_Identical_AllParts()
+    {
+        runIsMatchTest(AnswerType.yes, AnswerType.yes, AnswerType.yes, AnswerType.yes, ContactMatchType.Identical);
+    }
 
     // TODO: Need to change these tests to use mock objects. Add back in once we are ready to start make them pass.
-
-//    // Step 2 - Return ContactMatchType.Identical if all the parts that are specified in
-//    // either Contact match
-//    @Test
-//    void compareTo_Identical_AllParts()
-//    {
-//        Contact c1 = createBaseContact();
-//        Contact c2 = createBaseContact();
-//
-//        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
-//    }
-//
 //    @Test
 //    void compareTo_Identical_AddressMissing()
 //    {

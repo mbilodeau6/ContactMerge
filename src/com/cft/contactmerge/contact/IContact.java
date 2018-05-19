@@ -1,7 +1,5 @@
 package com.cft.contactmerge.contact;
 
-import com.cft.contactmerge.ContactMatchResult;
-
 public interface IContact {
     public void setName(IContactProperty<Name> name);
     public IContactProperty<Name> getName();

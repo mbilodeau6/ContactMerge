@@ -1,8 +1,8 @@
-package com.cft.contactmerge.tests;
+package com.cft.contactmerge.contact.tests;
 
 import com.cft.contactmerge.AnswerType;
-import com.cft.contactmerge.ContactMatchResult;
-import com.cft.contactmerge.ContactMatchType;
+import com.cft.contactmerge.contact.ContactMatchResult;
+import com.cft.contactmerge.contact.ContactMatchType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

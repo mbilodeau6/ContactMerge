@@ -5,6 +5,7 @@
  * appear to be appropriate (via removeMath).
  */
 package com.cft.contactmerge;
+import com.cft.contactmerge.contact.ContactMatchType;
 import com.cft.contactmerge.contact.IContact;
 
 import java.util.*;
