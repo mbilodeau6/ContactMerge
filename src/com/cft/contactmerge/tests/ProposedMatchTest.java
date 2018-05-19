@@ -2,8 +2,7 @@ package com.cft.contactmerge.tests;
 
 import java.util.*;
 import com.cft.contactmerge.*;
-import com.cft.contactmerge.contact.Contact;
-import com.cft.contactmerge.contact.IContact;
+import com.cft.contactmerge.contact.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,10 +38,9 @@ class ProposedMatchTest {
     void getContactToMerge()
     {
         Contact expectedContactToMerge = new Contact();
-        expectedContactToMerge.setFirstName("John");
-        expectedContactToMerge.setLastName("Doe");
-        expectedContactToMerge.setAddress("123 Main St");
-        expectedContactToMerge.setPhone("(520) 555-1234");
+        expectedContactToMerge.setName(new Name(new FirstName("John"), new LastName("Doe")));
+        expectedContactToMerge.setAddress(new Address(new StreetAddress("123 Main St"), new GeneralProperty("Tucson"), new GeneralProperty("AZ"), null, null));
+        expectedContactToMerge.setPhone(new PhoneNumber("(520) 555-1234"));
 
         ProposedMatch proposedMatch = new ProposedMatch(expectedContactToMerge, new ArrayList<IContact>());
 
@@ -50,8 +48,7 @@ class ProposedMatchTest {
 
         // TODO: Replace the following tests with a call to check if Contact.CompareTo() is
         // ContactMatchType.Identical once CompareTo() is implemented.
-        assertEquals(expectedContactToMerge.getFirstName(), actualContactToMerge.getFirstName(), getVerificationMessage("FirstName"));
-        assertEquals(expectedContactToMerge.getLastName(), actualContactToMerge.getLastName(), getVerificationMessage("LastName"));
+        assertEquals(expectedContactToMerge.getName(), actualContactToMerge.getName(), getVerificationMessage("Name"));
         assertEquals(expectedContactToMerge.getAddress(), actualContactToMerge.getAddress(), getVerificationMessage("Address"));
         assertEquals(expectedContactToMerge.getPhone(), actualContactToMerge.getPhone(), getVerificationMessage("Phone"));
     }
@@ -61,15 +58,15 @@ class ProposedMatchTest {
         List<IContact> testTargetContacts = new ArrayList<IContact>();
 
         Contact contact1 = new Contact();
-        contact1.setFirstName("A");
+        contact1.setName(new Name(new LastName("Z"), new FirstName("A")));
         testTargetContacts.add(contact1);
 
         Contact contact2 = new Contact();
-        contact2.setFirstName("B");
+        contact2.setName(new Name(new LastName("Z"), new FirstName("B")));
         testTargetContacts.add(contact2);
 
         Contact contact3 = new Contact();
-        contact3.setFirstName("C");
+        contact3.setName(new Name(new LastName("Z"), new FirstName("C")));
         testTargetContacts.add(contact3);
 
         return testTargetContacts;
@@ -77,7 +74,7 @@ class ProposedMatchTest {
 
     private boolean listContainsContact(String searchFirstName, Collection<IContact> contactList) {
         for(IContact contact: contactList) {
-            if (contact.getFirstName() == searchFirstName) {
+            if (contact.getName().getValue().getFirstName().getValue() == searchFirstName) {
                 return true;
             }
         }
