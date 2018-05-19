@@ -29,7 +29,7 @@ class GeneralPropertyTest {
     }
 
     @Test
-    void GeneralProperty_isMatch_Yes_Equal() {
+    void isMatch_Yes_Equal() {
         GeneralProperty source = new GeneralProperty("Tucson");
         GeneralProperty target = new GeneralProperty("tucson");
 
@@ -37,7 +37,7 @@ class GeneralPropertyTest {
     }
 
     @Test
-    void GeneralProperty_isMatch_No() {
+    void isMatch_No() {
         GeneralProperty source = new GeneralProperty("Phoenix");
         GeneralProperty target = new GeneralProperty("Tucson");
 
@@ -45,7 +45,7 @@ class GeneralPropertyTest {
     }
 
     @Test
-    void GeneralProperty_getValue() {
+    void getValue() {
         GeneralProperty property = new GeneralProperty("Tucson");
 
         assertEquals("Tucson", property.getValue());

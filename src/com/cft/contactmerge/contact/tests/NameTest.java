@@ -14,14 +14,6 @@ import com.cft.contactmerge.contact.*;
 
 class NameTest {
 
-    private IContactProperty<String> createMockNamePart(String name)
-    {
-        IContactProperty<String> namePartMock = mock(IContactProperty.class);
-        when(namePartMock.getValue()).thenReturn(name);
-
-        return namePartMock;
-    }
-
     /* -------------------------------------------------------------------------------------
      * Constructor Tests
      * -------------------------------------------------------------------------------------
@@ -29,7 +21,8 @@ class NameTest {
     @Test
     void Constructor()
     {
-        Name property = new Name(createMockNamePart("Doe"), createMockNamePart("Jane"));
+        Name property = new Name(SharedTestHelpers.createMockContactProperty("Doe"),
+                SharedTestHelpers.createMockContactProperty("Jane"));
 
         assertNotNull(property);
     }
@@ -38,14 +31,14 @@ class NameTest {
     void Constructor_NullLastName()
     {
         assertThrows(IllegalArgumentException.class, () ->
-                new Name(null, createMockNamePart("Jane")));
+                new Name(null, SharedTestHelpers.createMockContactProperty("Jane")));
     }
 
     @Test
     void Constructor_NullFirstName()
     {
         assertThrows(IllegalArgumentException.class, () ->
-                new Name(createMockNamePart("Doe"), null));
+                new Name(SharedTestHelpers.createMockContactProperty("Doe"), null));
     }
 
     /* -------------------------------------------------------------------------------------
@@ -53,9 +46,9 @@ class NameTest {
      * -------------------------------------------------------------------------------------
      */
     @Test
-    void Name_getValue() {
-        IContactProperty<String> mockLastName = createMockNamePart("Doe");
-        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
+    void getValue() {
+        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
+        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -65,8 +58,8 @@ class NameTest {
 
     @Test
     void Name_toString() {
-        IContactProperty<String> mockLastName = createMockNamePart("Doe");
-        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
+        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
+        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -74,9 +67,9 @@ class NameTest {
     }
 
     @Test
-    void Name_getFirstName() {
-        IContactProperty<String> mockLastName = createMockNamePart("Doe");
-        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
+    void getFirstName() {
+        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
+        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -84,9 +77,9 @@ class NameTest {
     }
 
     @Test
-    void Name_getLastName() {
-        IContactProperty<String> mockLastName = createMockNamePart("Doe");
-        IContactProperty<String> mockFirstName = createMockNamePart("Jane");
+    void getLastName() {
+        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
+        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -145,47 +138,59 @@ class NameTest {
 
     // The actual isMatch tests
     @Test
-    void Name_isMatchWhenLastNameYesAndFirstNameYes() {
+    void isMatchWhenLastNameYesAndFirstNameYes() {
         runIsMatchTest(AnswerType.yes, AnswerType.yes, AnswerType.yes);
     }
 
     @Test
-    void Name_isMatchWhenLastNameYesAndFirstNameMaybe() {
+    void isMatchWhenLastNameYesAndFirstNameMaybe() {
         runIsMatchTest(AnswerType.yes, AnswerType.maybe, AnswerType.maybe);
     }
 
     @Test
-    void Name_isMatchWhenLastNameYesAndFirstNameNo() {
+    void isMatchWhenLastNameYesAndFirstNameNo() {
         runIsMatchTest(AnswerType.yes, AnswerType.no, AnswerType.no);
     }
 
     @Test
-    void Name_isMatchWhenLastNameMaybeAndFirstNameYes() {
+    void isMatchWhenLastNameMaybeAndFirstNameYes() {
         runIsMatchTest(AnswerType.maybe, AnswerType.yes, AnswerType.maybe);
     }
 
     @Test
-    void Name_isMatchWhenLastNameMaybeAndFirstNameMaybe() {
+    void isMatchWhenLastNameMaybeAndFirstNameMaybe() {
         runIsMatchTest(AnswerType.maybe, AnswerType.maybe, AnswerType.maybe);
     }
 
     @Test
-    void Name_isMatchWhenLastNameMaybeAndFirstNameNo() {
+    void isMatchWhenLastNameMaybeAndFirstNameNo() {
         runIsMatchTest(AnswerType.maybe, AnswerType.no, AnswerType.no);
     }
 
     @Test
-    void Name_isMatchWhenLastNameNoAndFirstNameYes() {
+    void isMatchWhenLastNameNoAndFirstNameYes() {
         runIsMatchTest(AnswerType.no, AnswerType.yes, AnswerType.no);
     }
 
     @Test
-    void Name_isMatchWhenLastNameNoAndFirstNameMaybe() {
+    void isMatchWhenLastNameNoAndFirstNameMaybe() {
         runIsMatchTest(AnswerType.no, AnswerType.yes, AnswerType.no);
     }
 
     @Test
-    void Name_isMatchWhenLastNameNoAndFirstNameNo() {
+    void isMatchWhenLastNameNoAndFirstNameNo() {
         runIsMatchTest(AnswerType.no, AnswerType.no, AnswerType.no);
     }
+
+    // Adding one test that uses the real internal properties to make sure everything is
+    // wired up correctly. All other isMatch() tests are using mocks.
+    @Test
+    void isMatch_Maybe_RealInternalProperties() {
+        Name sourceName = new Name(new LastName("Adams"), new FirstName("Bobby Joe"));
+
+        Name targetName = new Name(new LastName("Adams"), new FirstName("Joe"));
+
+        assertEquals(AnswerType.maybe, sourceName.isMatch(targetName));
+    }
+
 }
