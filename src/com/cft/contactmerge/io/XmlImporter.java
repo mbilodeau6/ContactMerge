@@ -1,14 +1,12 @@
 package com.cft.contactmerge.io;
 
-import com.cft.contactmerge.Contact;
+import com.cft.contactmerge.contact.Contact;
 
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.io.*;
-import java.util.stream.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.NamedNodeMap;

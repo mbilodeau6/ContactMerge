@@ -1,4 +1,6 @@
-package com.cft.contactmerge;
+package com.cft.contactmerge.contact;
+
+import com.cft.contactmerge.ContactMatchResult;
 
 public interface IContact {
     public void setFirstName(String firstName);
@@ -25,5 +27,5 @@ public interface IContact {
     public void setEmail(String email);
     public String getEmail();
 
-    public ContactMatchResult CompareTo(IContact compareContact);
+    public ContactMatchResult compareTo(IContact compareContact);
 }

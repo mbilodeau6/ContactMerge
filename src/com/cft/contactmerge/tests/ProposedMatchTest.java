@@ -2,6 +2,8 @@ package com.cft.contactmerge.tests;
 
 import java.util.*;
 import com.cft.contactmerge.*;
+import com.cft.contactmerge.contact.Contact;
+import com.cft.contactmerge.contact.IContact;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

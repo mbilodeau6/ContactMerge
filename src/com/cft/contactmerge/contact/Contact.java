@@ -1,4 +1,7 @@
-package com.cft.contactmerge;
+package com.cft.contactmerge.contact;
+
+import com.cft.contactmerge.ContactMatchResult;
+import com.cft.contactmerge.ContactMatchType;
 
 public class Contact implements IContact {
     private String firstName;
@@ -42,7 +45,7 @@ public class Contact implements IContact {
     public void setEmail(String email) { this.email = email; };
     public String getEmail() { return this.email; };
 
-    public ContactMatchResult CompareTo(IContact compareContact)
+    public ContactMatchResult compareTo(IContact compareContact)
     {
         // TODO: Need to add logic
         return new ContactMatchResult(ContactMatchType.NoMatch);

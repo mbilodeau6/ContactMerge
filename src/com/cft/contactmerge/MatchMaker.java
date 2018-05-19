@@ -5,6 +5,8 @@
  * appear to be appropriate (via removeMath).
  */
 package com.cft.contactmerge;
+import com.cft.contactmerge.contact.IContact;
+
 import java.util.*;
 
 public class MatchMaker {
@@ -32,7 +34,7 @@ public class MatchMaker {
             List<IContact> possibleMatches = new ArrayList<IContact>();
 
             for(IContact existingContact: existingContacts) {
-                if (contactToMerge.CompareTo(existingContact).getMatchType() != ContactMatchType.NoMatch) {
+                if (contactToMerge.compareTo(existingContact).getMatchType() != ContactMatchType.NoMatch) {
                     possibleMatches.add(existingContact);
                 }
 

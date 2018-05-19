@@ -4,9 +4,9 @@
  * will be identified by ProposedTargetIndex.
  */
 package com.cft.contactmerge;
-import javax.naming.OperationNotSupportedException;
+import com.cft.contactmerge.contact.IContact;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ProposedMatch {
     private IContact contactToMerge;
