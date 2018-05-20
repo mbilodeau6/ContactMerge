@@ -262,40 +262,24 @@ class ContactTest {
     }
 
     // TODO: Need to change these tests to use mock objects. Add back in once we are ready to start make them pass.
-//    @Test
-//    void compareTo_Identical_AddressMissing()
-//    {
-//        Contact c1 = createBaseContact();
-//        clearAddress(c1);
-//
-//        Contact c2 = createBaseContact();
-//        clearAddress(c2);
-//
-//        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
-//    }
-//
-//    @Test
-//    void compareTo_Identical_PhoneMissing()
-//    {
-//        Contact c1 = createBaseContact();
-//        c1.setPhone(null);
-//        Contact c2 = createBaseContact();
-//        c2.setPhone("");
-//
-//        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
-//    }
-//
-//    @Test
-//    void compareTo_Identical_EmailMissing()
-//    {
-//        Contact c1 = createBaseContact();
-//        c1.setEmail("");
-//        Contact c2 = createBaseContact();
-//        c2.setEmail(null);
-//
-//        assertEquals(ContactMatchType.Identical, c1.compareTo(c2).getMatchType());
-//    }
-//
+    @Test
+    void compareTo_Identical_AddressMissing()
+    {
+        runIsMatchTest(AnswerType.yes, null, AnswerType.yes, AnswerType.yes, ContactMatchType.Identical);
+    }
+
+    @Test
+    void compareTo_Identical_PhoneMissing()
+    {
+        runIsMatchTest(AnswerType.yes, AnswerType.yes, null, AnswerType.yes, ContactMatchType.Identical);
+    }
+
+    @Test
+    void compareTo_Identical_EmailMissing()
+    {
+        runIsMatchTest(AnswerType.yes, AnswerType.yes, AnswerType.yes, null, ContactMatchType.Identical);
+    }
+
 //    // Step 3 - Return ContactMatchType.NoMatch if all of the parts that are specified
 //    // in ContactToMerge do not match the ExistingContact
 //    @Test

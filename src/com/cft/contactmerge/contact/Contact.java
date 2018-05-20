@@ -2,9 +2,6 @@ package com.cft.contactmerge.contact;
 
 import com.cft.contactmerge.AnswerType;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Contact implements IContact {
     private IContactProperty<Name> name;
 
@@ -32,52 +29,25 @@ public class Contact implements IContact {
 
     public ContactMatchResult compareTo(IContact compareContact)
     {
-        Set<AnswerType> answerTypesFound = new HashSet<AnswerType>();
+        ContactMatchTally tally = new ContactMatchTally();
 
         // We are going to determine if any no's or maybe's are found in any part
-        // TODO: Performance note. In theory, as soon as we hit the first no, we could return no. Need to monitor.
+        // TODO: Performance note. In theory, we may be able to make a determination before running all comparisons.
+        tally.addComparison(this.name, compareContact.getName());
+        tally.addComparison(this.address, compareContact.getAddress());
+        tally.addComparison(this.phone, compareContact.getPhone());
+        tally.addComparison(this.email, compareContact.getEmail());
 
-        // TODO: Name should never be empty. Should be able to remove the check once Contact is changed to enforce.
-        if (this.name != null && compareContact.getName() != null) {
-            answerTypesFound.add(this.name.isMatch(compareContact.getName()));
-        }
-        else {
-            answerTypesFound.add(AnswerType.no);
-        }
-
-        if (this.address != null && compareContact.getAddress() != null) {
-            answerTypesFound.add(this.address.isMatch(compareContact.getAddress()));
-        }
-        else {
-            answerTypesFound.add(AnswerType.maybe);
-        }
-
-        if (this.phone != null && compareContact.getPhone() != null) {
-            answerTypesFound.add(this.phone.isMatch(compareContact.getPhone()));
-        }
-        else {
-            answerTypesFound.add(AnswerType.maybe);
-        }
-
-        if (this.email != null && compareContact.getEmail() != null) {
-            answerTypesFound.add(this.email.isMatch(compareContact.getEmail()));
-        }
-        else {
-            answerTypesFound.add(AnswerType.maybe);
-        }
-
+        // This is where we make the decision on what to return
         ContactMatchType matchType = ContactMatchType.NoMatch;
 
-        // If any parts do not match, we return no. If everything has at least a maybe match
-        // we return maybe. We also return maybe if Zip if a no. Everything must match for
-        // us to return a yes.
-        if (answerTypesFound.contains(AnswerType.no))
+        if (tally.getNoCount() > 0)
             matchType = ContactMatchType.NoMatch;
         else {
-            if (answerTypesFound.contains(AnswerType.maybe))
+            if (tally.getMaybeCount() > 0)
                 matchType = ContactMatchType.PotentialMatch;
             else {
-                if (answerTypesFound.contains(AnswerType.yes)) {
+                if (tally.getYesCount() > 0) {
                     matchType = ContactMatchType.Identical;
                 }
             }
