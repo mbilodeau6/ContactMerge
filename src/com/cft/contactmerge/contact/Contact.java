@@ -27,32 +27,66 @@ public class Contact implements IContact {
     public void setEmail(IContactProperty<String> email) { this.email = email; };
     public IContactProperty<String> getEmail() { return this.email; };
 
+    private ContactMatchResult calculateMatchResult(AnswerType nameMatch,
+                                                    ContactMatchTally tally,
+                                                    AnswerType lastNameMatch) {
+        // If everything matches
+        if (nameMatch == AnswerType.yes && tally.getYesCount() > 0 &&
+                (tally.getYesCount() + tally.getBothNullCount()) == tally.getTotalSubmitted()) {
+            return new ContactMatchResult(ContactMatchType.Identical);
+        }
+
+        // If name and at least one other key contact property matches but a key contact property doesn't match
+        if (nameMatch == AnswerType.yes && tally.getYesCount() > 0 && tally.getNoCount() > 0) {
+            return new ContactMatchResult(ContactMatchType.MatchButModifying);
+        }
+        // If name and at least one other key contact property matches
+        if (nameMatch == AnswerType.yes && tally.getYesCount() > 0) {
+            return new ContactMatchResult(ContactMatchType.Match);
+        }
+
+        // If only name matches or name is a maybe match
+        if (nameMatch != AnswerType.no) {
+            return new ContactMatchResult(ContactMatchType.PotentialMatch);
+        }
+
+        // If name doesn't match but one of the other key fields does match
+        if (tally.getYesCount() > 0) {
+            return new ContactMatchResult(ContactMatchType.Related);
+        }
+
+        // If name doesn't match but one of the other key fields is a maybe match
+        if (tally.getMaybeCount() > 0  || lastNameMatch != AnswerType.no) {
+            return new ContactMatchResult(ContactMatchType.PotentiallyRelated);
+        }
+
+        // Default
+        return new ContactMatchResult(ContactMatchType.NoMatch);
+    }
+
     public ContactMatchResult compareTo(IContact compareContact)
     {
-        ContactMatchTally tally = new ContactMatchTally();
+        AnswerType nameMatch = AnswerType.no;
+        AnswerType lastNameMatch = AnswerType.no;
+
+        // TODO: Won't need to test if name is null once name is required in Contact
+        if (this.name != null && compareContact.getName() != null)
+        {
+            nameMatch = this.name.isMatch(compareContact.getName());
+
+            if (this.name.getValue() != null) {
+                lastNameMatch = this.name.getValue().getLastName().isMatch(compareContact.getName().getValue().getLastName());
+            }
+        }
 
         // We are going to determine if any no's or maybe's are found in any part
         // TODO: Performance note. In theory, we may be able to make a determination before running all comparisons.
-        tally.addComparison(this.name, compareContact.getName());
+        ContactMatchTally tally = new ContactMatchTally();
+
         tally.addComparison(this.address, compareContact.getAddress());
         tally.addComparison(this.phone, compareContact.getPhone());
         tally.addComparison(this.email, compareContact.getEmail());
 
-        // This is where we make the decision on what to return
-        ContactMatchType matchType = ContactMatchType.NoMatch;
-
-        if (tally.getNoCount() > 0)
-            matchType = ContactMatchType.NoMatch;
-        else {
-            if (tally.getMaybeCount() > 0)
-                matchType = ContactMatchType.PotentialMatch;
-            else {
-                if (tally.getYesCount() > 0) {
-                    matchType = ContactMatchType.Identical;
-                }
-            }
-        }
-
-        return new ContactMatchResult(matchType);
+        return calculateMatchResult(nameMatch, tally, lastNameMatch);
     }
 }

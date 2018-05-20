@@ -8,30 +8,61 @@ import java.util.Collection;
 public class ContactMatchTally {
     private Collection<AnswerType> answerTypesFound = new ArrayList<AnswerType>();
 
+    private int yesCount = 0;
+    private int noCount = 0;
+    private int maybeCount = 0;
+    private int bothNullCount = 0;
+    private int oneNullCount = 0;
+
     public void addComparison(IContactProperty source, IContactProperty target)
     {
         if (source != null && target != null) {
-            answerTypesFound.add(source.isMatch(target));
+            switch(source.isMatch(target)) {
+                case yes:
+                    yesCount++;
+                    break;
+                case maybe:
+                    maybeCount++;
+                    break;
+                default:
+                    noCount++;
+            }
         }
         else {
             if (source == null && target == null) {
-                answerTypesFound.add(AnswerType.yes);
+                bothNullCount++;
             }
             else {
-                answerTypesFound.add(AnswerType.no);
+                oneNullCount++;
             }
         }
     }
 
     public int getYesCount() {
-        return (int) answerTypesFound.stream().filter(x -> x == AnswerType.yes).count();
+        return yesCount;
     }
 
     public int getNoCount() {
-        return (int) answerTypesFound.stream().filter(x -> x == AnswerType.no).count();
+        return noCount;
     }
 
     public int getMaybeCount() {
-        return (int) answerTypesFound.stream().filter(x -> x == AnswerType.maybe).count();
+        return maybeCount;
+    }
+
+    public int getBothNullCount() {
+        return bothNullCount;
+    }
+
+    public int getOneNullCount() {
+        return oneNullCount;
+    }
+
+    public int getTotalEvaluated() {
+        return yesCount + noCount + maybeCount;
+    }
+
+    public int getTotalSubmitted() {
+        return yesCount + noCount + maybeCount + bothNullCount + oneNullCount;
     }
 }
