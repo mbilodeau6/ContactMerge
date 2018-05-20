@@ -1,6 +1,6 @@
 package com.cft.contactmerge.io;
 
-import com.cft.contactmerge.Contact;
+import com.cft.contactmerge.contact.Contact;
 import java.util.*;
 
 public class TsvImporter implements IImporter, Iterable<Contact> {

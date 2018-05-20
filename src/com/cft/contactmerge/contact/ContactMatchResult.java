@@ -1,4 +1,6 @@
-package com.cft.contactmerge;
+package com.cft.contactmerge.contact;
+
+import com.cft.contactmerge.AnswerType;
 
 public class ContactMatchResult {
     private ContactMatchType matchType;

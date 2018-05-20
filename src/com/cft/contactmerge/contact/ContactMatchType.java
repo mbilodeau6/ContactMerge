@@ -1,4 +1,4 @@
-package com.cft.contactmerge;
+package com.cft.contactmerge.contact;
 
 public enum ContactMatchType {
     Identical,

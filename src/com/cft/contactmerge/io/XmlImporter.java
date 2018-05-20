@@ -1,14 +1,11 @@
 package com.cft.contactmerge.io;
 
-import com.cft.contactmerge.Contact;
-
+import com.cft.contactmerge.contact.*;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.io.*;
-import java.util.stream.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.NamedNodeMap;
@@ -119,14 +116,18 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
 
                 Map<String, String> data = getContactValues(dataNodes.item(nodeIndex++));
 
-                contact.setLastName(data.get(columnMap.get("indiv_lastname")));
-                contact.setFirstName(data.get(columnMap.get("indiv_firstname")));
-                contact.setAddress(data.get(columnMap.get("donor_address1")));
-                contact.setCity(data.get(columnMap.get("donor_city")));
-                contact.setState(data.get(columnMap.get("donor_state")));
-                contact.setZip(data.get(columnMap.get("donor_zip")));
-                contact.setPhone(data.get(columnMap.get("donor_phone")));
-                contact.setEmail(data.get(columnMap.get("donor_email")));
+                contact.setName(new Name(new LastName(data.get(columnMap.get("indiv_lastname"))),
+                        new FirstName(data.get(columnMap.get("indiv_firstname")))));
+
+                contact.setAddress(new Address(new StreetAddress(data.get(columnMap.get("donor_address1"))),
+                        new GeneralProperty(data.get(columnMap.get("donor_city"))),
+                        new GeneralProperty(data.get(columnMap.get("donor_state"))),
+                        null,
+                        new GeneralProperty(data.get(columnMap.get("donor_zip")))));
+
+                contact.setPhone(new PhoneNumber(data.get(columnMap.get("donor_phone"))));
+
+                contact.setEmail(new GeneralProperty(data.get(columnMap.get("donor_email"))));
 
                 return contact;
             }

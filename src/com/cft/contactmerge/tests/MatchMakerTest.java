@@ -2,6 +2,7 @@ package com.cft.contactmerge.tests;
 
 import java.util.*;
 import com.cft.contactmerge.*;
+import com.cft.contactmerge.contact.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,27 +39,27 @@ class MatchMakerTest {
         List<IContact> existingContacts = new ArrayList<IContact>();
 
         Contact contact1 = new Contact();
-        contact1.setFirstName("A");
+        contact1.setName(new Name(new LastName("Z"), new FirstName("A")));
         existingContacts.add(contact1);
 
         Contact contact2 = new Contact();
-        contact2.setFirstName("B");
+        contact2.setName(new Name(new LastName("Z"), new FirstName("B")));
         existingContacts.add(contact2);
 
         Contact contact3 = new Contact();
-        contact3.setFirstName("C");
+        contact3.setName(new Name(new LastName("Z"), new FirstName("C")));
         existingContacts.add(contact3);
 
         Contact contact4 = new Contact();
-        contact4.setFirstName("D");
+        contact4.setName(new Name(new LastName("Z"), new FirstName("D")));
         existingContacts.add(contact4);
 
         Contact contact5 = new Contact();
-        contact5.setFirstName("E");
+        contact5.setName(new Name(new LastName("Z"), new FirstName("E")));
         existingContacts.add(contact5);
 
         Contact contact6 = new Contact();
-        contact6.setFirstName("F");
+        contact6.setName(new Name(new LastName("Z"), new FirstName("F")));
         existingContacts.add(contact6);
 
         return existingContacts;
@@ -71,7 +72,7 @@ class MatchMakerTest {
             boolean found = false;
 
             for(IContact contact: contactList) {
-                if (contact.getFirstName() == firstName) {
+                if (contact.getName().getValue().getFirstName().getValue() == firstName) {
                     found = true;
                     break;
                 }
@@ -85,10 +86,10 @@ class MatchMakerTest {
     void getProposedMatches_NoMatches() {
         // Set up list of contacts that won't match anything
         IContact contactToMerge1 = mock(IContact.class);
-        when(contactToMerge1.CompareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.NoMatch));
+        when(contactToMerge1.compareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.NoMatch));
 
         IContact contactToMerge2 = mock(IContact.class);
-        when(contactToMerge2.CompareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.NoMatch));
+        when(contactToMerge2.compareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.NoMatch));
 
         List<IContact> contactsToMerge = Arrays.asList(contactToMerge1, contactToMerge2);
 
@@ -106,7 +107,7 @@ class MatchMakerTest {
     void getProposedMatches() {
         // Set up first contact to match "A" as Match and "C" and PotentiallyRelated
         IContact contactToMerge1 = mock(IContact.class);
-        when(contactToMerge1.CompareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.Match))
+        when(contactToMerge1.compareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.Match))
                 .thenReturn(new ContactMatchResult(ContactMatchType.NoMatch))
                 .thenReturn(new ContactMatchResult(ContactMatchType.PotentiallyRelated))
                 .thenReturn(new ContactMatchResult(ContactMatchType.NoMatch));
@@ -114,7 +115,7 @@ class MatchMakerTest {
         // Set up second contact to match "B" as Related, "E" and PotentialMatch, and
         // "F" as Identical
         IContact contactToMerge2 = mock(IContact.class);
-        when(contactToMerge2.CompareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.NoMatch))
+        when(contactToMerge2.compareTo(any())).thenReturn(new ContactMatchResult(ContactMatchType.NoMatch))
                 .thenReturn(new ContactMatchResult(ContactMatchType.Related))
                 .thenReturn(new ContactMatchResult(ContactMatchType.NoMatch))
                 .thenReturn(new ContactMatchResult(ContactMatchType.NoMatch))

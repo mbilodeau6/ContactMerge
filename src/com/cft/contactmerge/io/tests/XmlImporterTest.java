@@ -1,9 +1,9 @@
 package com.cft.contactmerge.io.tests;
 
+import com.cft.contactmerge.contact.Contact;
 import com.cft.contactmerge.io.XmlImporter;
 import org.junit.jupiter.api.Test;
 import java.io.*;
-import com.cft.contactmerge.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,11 +133,11 @@ class XmlImporterTest {
         int i = 0;
         for (Contact contact : importer)
         {
-            assertEquals(lastNames.get(i), contact.getLastName(), getVerificationMessage(String.format("lastNames[%d]", i)));
-            assertEquals(firstNames.get(i), contact.getFirstName(), getVerificationMessage(String.format("firstNames[%d]", i)));
-            assertEquals(addresses.get(i), contact.getAddress(), getVerificationMessage(String.format("addresses[%d]", i)));
-            assertEquals(phones.get(i), contact.getPhone(), getVerificationMessage(String.format("phones[%d]", i)));
-            assertEquals(emails.get(i), contact.getEmail(), getVerificationMessage(String.format("emails[%d]", i)));
+            assertEquals(lastNames.get(i), contact.getName().getValue().getLastName().getValue(), getVerificationMessage(String.format("lastNames[%d]", i)));
+            assertEquals(firstNames.get(i), contact.getName().getValue().getFirstName().getValue(), getVerificationMessage(String.format("firstNames[%d]", i)));
+            assertEquals(addresses.get(i), contact.getAddress().getValue().getStreetAddress().getValue(), getVerificationMessage(String.format("addresses[%d]", i)));
+            assertEquals(phones.get(i), contact.getPhone().getValue(), getVerificationMessage(String.format("phones[%d]", i)));
+            assertEquals(emails.get(i), contact.getEmail().getValue(), getVerificationMessage(String.format("emails[%d]", i)));
 
             i++;
         }

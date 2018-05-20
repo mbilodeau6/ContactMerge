@@ -3,7 +3,8 @@ package com.cft.contactmerge.io;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-import com.cft.contactmerge.*;
+
+import com.cft.contactmerge.contact.Contact;
 
 public interface IImporter {
     public void Load(String filename) throws FileNotFoundException, IOException;

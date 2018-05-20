@@ -6,7 +6,7 @@
 package com.cft.contactmerge.io;
 
 import com.cft.contactmerge.ColumnMap;
-import com.cft.contactmerge.Contact;
+import com.cft.contactmerge.contact.Contact;
 import java.util.Collection;
 
 public class ContactImporter {
