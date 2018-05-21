@@ -38,7 +38,6 @@ public class MatchMaker {
                 if (contactToMerge.compareTo(existingContact).getMatchType() != ContactMatchType.NoMatch) {
                     possibleMatches.add(existingContact);
                 }
-
             }
 
             ProposedMatch proposedMatch = new ProposedMatch(contactToMerge, possibleMatches);
