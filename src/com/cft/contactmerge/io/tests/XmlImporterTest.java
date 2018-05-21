@@ -65,8 +65,7 @@ class XmlImporterTest {
     /* --------------------------------------------------------------------------------
      * Testing Iterator
      * -------------------------------------------------------------------------------- */
-
-    private static String testXml = "<SharpGridExport>\n" +
+    private static String xmlPrefix = "<SharpGridExport>\n" +
             " <RowDefinition count=\"23\">\n" +
             "  <Field alias=\"c1\" name=\"donor_donorid\" type=\"3\"/>\n" +
             "  <Field alias=\"c2\" name=\"indiv_firstname\" type=\"8\"/>\n" +
@@ -79,11 +78,15 @@ class XmlImporterTest {
             "  <Field alias=\"c9\" name=\"donor_state\" type=\"8\"/>\n" +
             "  <Field alias=\"c10\" name=\"donor_zip\" type=\"8\"/>\n" +
             " </RowDefinition>\n" +
-            " <Data count=\"2\">\n" +
-            "  <row c1=\"13252\" c2=\"John\" c3=\"Doe\" c4=\"(520) 123-4567\" c5=\"jdoe@gmail.com\" c6=\"123 Main St\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n" +
-            "  <row c1=\"13253\" c2=\"Adam\" c3=\"Smith\" c4=\"(520) 111-2222\" c5=\"adam.smith@yahoo.com\" c6=\"1010 Speedway Blvd\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n" +
-            "</Data>\n" +
+            " <Data count=\"2\">\n";
+
+    private static String xmlSuffix = "</Data>\n" +
             "</SharpGridExport>\n";
+
+    private String createTestStream(String dataElements)
+    {
+        return xmlPrefix + dataElements + xmlSuffix;
+    }
 
     @Test
     void IteratorCalledBeforeLoad() {
@@ -106,10 +109,12 @@ class XmlImporterTest {
     }
 
     @Test
-    void IteratorHasNext() throws IOException {
+    void Iterator_HasNext() throws IOException {
+        String testData = "  <row c1=\"13252\" c2=\"John\" c3=\"Doe\" c4=\"\" c5=\"\" c6=\"\" c7=\"\" c8=\"\" c9=\"\" c10=\"\" />\n";
+
         XmlImporter importer = new XmlImporter();
 
-        try (InputStream inputStream = new ByteArrayInputStream(testXml.getBytes())) {
+        try (InputStream inputStream = new ByteArrayInputStream(createTestStream(testData).getBytes())) {
            importer.Load(inputStream);
         }
 
@@ -117,10 +122,14 @@ class XmlImporterTest {
     }
 
     @Test
-    void IteratorReturnsExpectedData() throws IOException {
+    void Iterator() throws IOException {
+
+        String testData = "  <row c1=\"13252\" c2=\"John\" c3=\"Doe\" c4=\"(520) 123-4567\" c5=\"jdoe@gmail.com\" c6=\"123 Main St\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n" +
+                "  <row c1=\"13253\" c2=\"Adam\" c3=\"Smith\" c4=\"(520) 111-2222\" c5=\"adam.smith@yahoo.com\" c6=\"1010 Speedway Blvd\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n";
+
         XmlImporter importer = new XmlImporter();
 
-        try (InputStream inputStream = new ByteArrayInputStream(testXml.getBytes())) {
+        try (InputStream inputStream = new ByteArrayInputStream(createTestStream(testData).getBytes())) {
             importer.Load(inputStream);
         }
 
@@ -143,5 +152,106 @@ class XmlImporterTest {
         }
 
         assertEquals(2, i, getVerificationMessage("contact count"));
+    }
+
+    // TODO: Need to refactor this code so that it is more flexible (can work with more attributes) and
+    // to reduce the amount of duplicate code
+    private void RunMissingDataTest(boolean streetAddressSpecified,
+                                    boolean citySpecified,
+                                    boolean stateSpecified,
+                                    boolean zipSpecified,
+                                    boolean phoneSpecified,
+                                    boolean emailSpecified) throws IOException {
+
+        String testData = "  <row c1=\"13252\" c2=\"John\" c3=\"Doe\" c4=\"\" c5=\"\" c6=\"\" c7=\"\" c8=\"\" c9=\"\" c10=\"\" />\n";
+
+        if (streetAddressSpecified) {
+            testData = testData.replaceAll("c6=\"\"", "c6=\"123 Main St\"");
+        }
+
+        if (citySpecified) {
+            testData = testData.replaceAll("c8=\"\"", "c8=\"Tucson\"");
+        }
+
+        if (stateSpecified) {
+            testData = testData.replaceAll("c9=\"\"", "c9=\"AZ\"");
+        }
+
+        if (zipSpecified) {
+            testData = testData.replaceAll("c10=\"\"", "c10=\"85750\"");
+        }
+
+        if (phoneSpecified) {
+            testData = testData.replaceAll("c4=\"\"", "c4=\"(520) 123-4567\"");
+        }
+
+        if (emailSpecified) {
+            testData = testData.replaceAll("c5=\"\"", "c5=\"jdoe@gmail.com\"");
+        }
+
+        XmlImporter importer = new XmlImporter();
+
+        try (InputStream inputStream = new ByteArrayInputStream(createTestStream(testData).getBytes())) {
+            importer.Load(inputStream);
+        }
+
+        Contact contact = importer.iterator().next();
+
+        assertEquals("Doe", contact.getName().getValue().getLastName().getValue(), "Verify LastName");
+        assertEquals("John", contact.getName().getValue().getFirstName().getValue(), "Verify FirstName");
+
+        if (streetAddressSpecified && citySpecified && stateSpecified && zipSpecified ) {
+            assertEquals("123 Main St", contact.getAddress().getValue().getStreetAddress().getValue(), "Verify StreetAddress");
+            assertEquals("Tucson", contact.getAddress().getValue().getCity().getValue(), "Verify City");
+            assertEquals("AZ", contact.getAddress().getValue().getState().getValue(), "Verify State");
+            assertEquals("85750", contact.getAddress().getValue().getZip().getValue(), "Verify Zip");
+        }
+        else {
+            assertNull(contact.getAddress(), "Verify Address");
+        }
+
+        if (phoneSpecified) {
+            assertEquals("(520) 123-4567", contact.getPhone().getValue(), "Verify Phone");
+        }
+        else {
+            assertNull(contact.getPhone(), "Verify Phone");
+        }
+
+        if (emailSpecified) {
+            assertEquals("jdoe@gmail.com", contact.getEmail().getValue(), "Verify Email");
+        }
+        else {
+            assertNull(contact.getEmail(), "Verify Email");
+        }
+    }
+
+    @Test
+    void Iterator_MissingEmailAndPhone() throws IOException {
+        RunMissingDataTest(true, true, true, true,
+                false, false);
+    }
+
+    @Test
+    void Iterator_MissingStreetAddress() throws IOException {
+        RunMissingDataTest(false, true, true, true,
+                true, true);
+    }
+
+    @Test
+    void Iterator_MissingCity() throws IOException {
+        RunMissingDataTest(true, false, true, true,
+                true, true);
+    }
+
+    @Test
+    void Iterator_MissingState() throws IOException {
+        RunMissingDataTest(true, true, false, true,
+                true, true);
+    }
+
+    @Test
+    void Iterator_MissingZip() throws IOException {
+        RunMissingDataTest(true, true, true, false,
+                true, true);
     }
 }

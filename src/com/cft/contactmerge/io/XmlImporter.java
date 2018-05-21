@@ -116,18 +116,39 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
 
                 Map<String, String> data = getContactValues(dataNodes.item(nodeIndex++));
 
+                // TODO: Need to figure out what to do if name is missing. Can't create a valid contact
+                // but how do we communicate the issue back to the user?
                 contact.setName(new Name(new LastName(data.get(columnMap.get("indiv_lastname"))),
                         new FirstName(data.get(columnMap.get("indiv_firstname")))));
 
-                contact.setAddress(new Address(new StreetAddress(data.get(columnMap.get("donor_address1"))),
-                        new GeneralProperty(data.get(columnMap.get("donor_city"))),
-                        new GeneralProperty(data.get(columnMap.get("donor_state"))),
-                        null,
-                        new GeneralProperty(data.get(columnMap.get("donor_zip")))));
+                // TODO: Can this be refactored to reduce duplicate code/patterns?
+                String streetAddress = data.get(columnMap.get("donor_address1"));
+                String city = data.get(columnMap.get("donor_city"));
+                String state = data.get(columnMap.get("donor_state"));
+                String zip = data.get(columnMap.get("donor_zip"));
 
-                contact.setPhone(new PhoneNumber(data.get(columnMap.get("donor_phone"))));
+                if (streetAddress != null && !streetAddress.isEmpty() &&
+                        city != null && !city.isEmpty() &&
+                        state != null && !state.isEmpty() &&
+                        zip != null && !zip.isEmpty()) {
+                    contact.setAddress(new Address(new StreetAddress(streetAddress),
+                            new GeneralProperty(city),
+                            new GeneralProperty(state),
+                            null,
+                            new GeneralProperty(zip)));
+                }
 
-                contact.setEmail(new GeneralProperty(data.get(columnMap.get("donor_email"))));
+                String phone = data.get(columnMap.get("donor_phone"));
+
+                if (phone != null && !phone.isEmpty()) {
+                    contact.setPhone(new PhoneNumber(phone));
+                }
+
+                String email = data.get(columnMap.get("donor_email"));
+
+                if (email != null && !email.isEmpty()) {
+                    contact.setEmail(new GeneralProperty(email));
+                }
 
                 return contact;
             }
