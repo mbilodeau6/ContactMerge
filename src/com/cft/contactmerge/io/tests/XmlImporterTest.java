@@ -19,21 +19,21 @@ class XmlImporterTest {
      * Testing Load(filename)
      * -------------------------------------------------------------------------------- */
     @Test
-    void XmlImporter_Load_NullFileName() {
+    void Load_NullFileName() {
         XmlImporter importer = new XmlImporter();
 
         assertThrows(IllegalArgumentException.class, () -> importer.Load( (String) null));
     }
 
     @Test
-    void XmlImporter_Load_EmptyFileName() {
+    void Load_EmptyFileName() {
         XmlImporter importer = new XmlImporter();
 
         assertThrows(IllegalArgumentException.class, () -> importer.Load(""));
     }
 
     @Test
-    void XmlImporter_Load_NonExistentFileName() {
+    void Load_NonExistentFileName() {
         // TODO: Would be great if we could test this without access the file system but articles
         // I've read indicate you shouldn't try to mock File. How else to do it?
         XmlImporter importer = new XmlImporter();
@@ -45,14 +45,14 @@ class XmlImporterTest {
      * Testing Load(inputStream)
      * -------------------------------------------------------------------------------- */
     @Test
-    void XmlImporter_Load_NullStream() {
+    void Load_NullStream() {
         XmlImporter importer = new XmlImporter();
 
         assertThrows(IllegalArgumentException.class, () -> importer.Load((InputStream) null));
     }
 
     @Test
-    void XmlImporter_Load_EmptyStream() throws IOException {
+    void Load_EmptyStream() throws IOException {
         XmlImporter importer = new XmlImporter();
 
         String testString = "";
@@ -86,14 +86,14 @@ class XmlImporterTest {
             "</SharpGridExport>\n";
 
     @Test
-    void XmlImporter_IteratorCalledBeforeLoad() {
+    void IteratorCalledBeforeLoad() {
         XmlImporter importer = new XmlImporter();
 
         assertThrows(IllegalStateException.class, () -> importer.iterator().hasNext());
     }
 
     @Test
-    void XmlImporter_Load_EmptyDataSet() throws IOException {
+    void Load_EmptyDataSet() throws IOException {
         XmlImporter importer = new XmlImporter();
 
         String testString = "<Data></Data>";
@@ -106,7 +106,7 @@ class XmlImporterTest {
     }
 
     @Test
-    void XmlImporter_IteratorHasNext() throws IOException {
+    void IteratorHasNext() throws IOException {
         XmlImporter importer = new XmlImporter();
 
         try (InputStream inputStream = new ByteArrayInputStream(testXml.getBytes())) {
@@ -117,7 +117,7 @@ class XmlImporterTest {
     }
 
     @Test
-    void XmlImporter_IteratorReturnsExpectedData() throws IOException {
+    void IteratorReturnsExpectedData() throws IOException {
         XmlImporter importer = new XmlImporter();
 
         try (InputStream inputStream = new ByteArrayInputStream(testXml.getBytes())) {
