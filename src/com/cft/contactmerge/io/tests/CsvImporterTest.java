@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UnknownFormatConversionException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -129,5 +130,105 @@ class CsvImporterTest {
         }
 
         assertEquals(2, i, "Verify contact count");
+    }
+
+    private void RunMissingDataTest(boolean streetAddressSpecified,
+                                    boolean citySpecified,
+                                    boolean stateSpecified,
+                                    boolean zipSpecified,
+                                    boolean phoneSpecified,
+                                    boolean emailSpecified) throws IOException {
+
+        String testData = "Bidder #,CRM ID,Type,Salutation,First,Last,Company,Phone #,E-mail,Address,City,State,Zip,Country,User Defined 1,User Defined 2,Notes,VIP,Table #,Table Name,Ticket #,Ticket Package,Express Checkout Credit Card,RSVP Status,Checked In\n" +
+                "5,,Person,,John,Doe,,(520) 123-4567,jdoe@gmail.com,123 Main St,Tucson,AZ,85716,,,Beider,,No,18,Group 1,3,Comp Ticket-Honoree,,,Yes\n";
+
+        if (!streetAddressSpecified) {
+            testData = testData.replaceAll("123 Main St", "");
+        }
+
+        if (!citySpecified) {
+            testData = testData.replaceAll("Tucson", "");
+        }
+
+        if (!stateSpecified) {
+            testData = testData.replaceAll("AZ", "");
+        }
+
+        if (!zipSpecified) {
+            testData = testData.replaceAll("85716", "");
+        }
+
+        if (!phoneSpecified) {
+            testData = testData.replaceAll("\\(520\\) 123\\-4567", "");
+        }
+
+        if (!emailSpecified) {
+            testData = testData.replaceAll("jdoe@gmail.com", "");
+        }
+
+        CsvImporter importer = new CsvImporter();
+
+        try (InputStream inputStream = new ByteArrayInputStream(testData.getBytes())) {
+            importer.Load(inputStream);
+        }
+
+        Contact contact = importer.iterator().next();
+
+        assertEquals("Doe", contact.getName().getValue().getLastName().getValue(), "Verify LastName");
+        assertEquals("John", contact.getName().getValue().getFirstName().getValue(), "Verify FirstName");
+
+        if (streetAddressSpecified && citySpecified && stateSpecified && zipSpecified ) {
+            assertEquals("123 Main St", contact.getAddress().getValue().getStreetAddress().getValue(), "Verify StreetAddress");
+            assertEquals("Tucson", contact.getAddress().getValue().getCity().getValue(), "Verify City");
+            assertEquals("AZ", contact.getAddress().getValue().getState().getValue(), "Verify State");
+            assertEquals("85716", contact.getAddress().getValue().getZip().getValue(), "Verify Zip");
+        }
+        else {
+            assertNull(contact.getAddress(), "Verify Address");
+        }
+
+        if (phoneSpecified) {
+            assertEquals("(520) 123-4567", contact.getPhone().getValue(), "Verify Phone");
+        }
+        else {
+            assertNull(contact.getPhone(), "Verify Phone");
+        }
+
+        if (emailSpecified) {
+            assertEquals("jdoe@gmail.com", contact.getEmail().getValue(), "Verify Email");
+        }
+        else {
+            assertNull(contact.getEmail(), "Verify Email");
+        }
+    }
+
+    @Test
+    void Iterator_MissingEmailAndPhone() throws IOException {
+        RunMissingDataTest(true, true, true, true,
+                false, false);
+    }
+
+    @Test
+    void Iterator_MissingStreetAddress() throws IOException {
+        RunMissingDataTest(false, true, true, true,
+                true, true);
+    }
+
+    @Test
+    void Iterator_MissingCity() throws IOException {
+        RunMissingDataTest(true, false, true, true,
+                true, true);
+    }
+
+    @Test
+    void Iterator_MissingState() throws IOException {
+        RunMissingDataTest(true, true, false, true,
+                true, true);
+    }
+
+    @Test
+    void Iterator_MissingZip() throws IOException {
+        RunMissingDataTest(true, true, true, false,
+                true, true);
     }
 }

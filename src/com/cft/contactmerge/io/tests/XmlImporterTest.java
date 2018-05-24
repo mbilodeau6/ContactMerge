@@ -122,6 +122,20 @@ class XmlImporterTest {
     }
 
     @Test
+    void Iterator_HasNext_FalseBecauseMissingName() throws IOException {
+        String testData = "  <row c1=\"13252\" c2=\"\" c3=\"Doe\" c4=\"\" c5=\"\" c6=\"\" c7=\"\" c8=\"\" c9=\"\" c10=\"\" />\n" +
+                "  <row c1=\"13252\" c2=\"John\" c3=\"\" c4=\"\" c5=\"\" c6=\"\" c7=\"\" c8=\"\" c9=\"\" c10=\"\" />\n";
+
+        XmlImporter importer = new XmlImporter();
+
+        try (InputStream inputStream = new ByteArrayInputStream(createTestStream(testData).getBytes())) {
+            importer.Load(inputStream);
+        }
+
+        assertFalse(importer.iterator().hasNext());
+    }
+
+    @Test
     void Iterator() throws IOException {
 
         String testData = "  <row c1=\"13252\" c2=\"John\" c3=\"Doe\" c4=\"(520) 123-4567\" c5=\"jdoe@gmail.com\" c6=\"123 Main St\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n" +
@@ -154,8 +168,31 @@ class XmlImporterTest {
         assertEquals(2, i, getVerificationMessage("contact count"));
     }
 
-    // TODO: Need to refactor this code so that it is more flexible (can work with more attributes) and
-    // to reduce the amount of duplicate code
+    @Test
+    void Iterator_SkipInvalidContacts() throws IOException {
+
+        String testData = "  <row c1=\"13252\" c2=\"\" c3=\"Doe\" c4=\"(520) 123-4567\" c5=\"jdoe@gmail.com\" c6=\"123 Main St\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n" +
+                "  <row c1=\"13252\" c2=\"John\" c3=\"\" c4=\"(520) 123-4567\" c5=\"jdoe@gmail.com\" c6=\"123 Main St\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n" +
+                "  <row c1=\"13253\" c2=\"Adam\" c3=\"Smith\" c4=\"(520) 111-2222\" c5=\"adam.smith@yahoo.com\" c6=\"1010 Speedway Blvd\" c7=\"\" c8=\"Tucson\" c9=\"AZ\" c10=\"85750\" />\n";
+
+        XmlImporter importer = new XmlImporter();
+
+        try (InputStream inputStream = new ByteArrayInputStream(createTestStream(testData).getBytes())) {
+            importer.Load(inputStream);
+        }
+
+        int i = 0;
+        for (Contact contact : importer)
+        {
+            assertEquals("Smith", contact.getName().getValue().getLastName().getValue(), getVerificationMessage(String.format("lastNames[%d]", i)));
+            assertEquals("Adam", contact.getName().getValue().getFirstName().getValue(), getVerificationMessage(String.format("firstNames[%d]", i)));
+
+            i++;
+        }
+
+        assertEquals(1, i, getVerificationMessage("contact count"));
+    }
+
     private void RunMissingDataTest(boolean streetAddressSpecified,
                                     boolean citySpecified,
                                     boolean stateSpecified,

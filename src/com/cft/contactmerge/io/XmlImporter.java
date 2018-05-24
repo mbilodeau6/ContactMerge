@@ -105,23 +105,22 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
         Iterator<Contact> it = new Iterator<Contact>() {
             private int nodeIndex = 0;
 
-            @Override
-            public boolean hasNext() {
-                return nodeIndex < dataNodes.getLength();
-            }
+            private Contact nextContact = null;
 
-            @Override
-            public Contact next() {
+            private Contact getNodeAsContact() {
                 Contact contact = new Contact();
 
-                Map<String, String> data = getContactValues(dataNodes.item(nodeIndex++));
+                Map<String, String> data = getContactValues(dataNodes.item(nodeIndex));
 
-                // TODO: Need to figure out what to do if name is missing. Can't create a valid contact
-                // but how do we communicate the issue back to the user?
-                contact.setName(new Name(new LastName(data.get(columnMap.get("indiv_lastname"))),
-                        new FirstName(data.get(columnMap.get("indiv_firstname")))));
+                String lastName = data.get(columnMap.get("indiv_lastname"));
+                String firstName = data.get(columnMap.get("indiv_firstname"));
 
-                // TODO: Can this be refactored to reduce duplicate code/patterns?
+                // Name is required. Return null if missing.
+                if (lastName == null || firstName == null || lastName.isEmpty() || firstName.isEmpty()) {
+                    return null;
+                }
+                contact.setName(new Name(new LastName(lastName), new FirstName(firstName)));
+
                 String streetAddress = data.get(columnMap.get("donor_address1"));
                 String city = data.get(columnMap.get("donor_city"));
                 String state = data.get(columnMap.get("donor_state"));
@@ -151,6 +150,33 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
                 }
 
                 return contact;
+            }
+
+            // Skip invalid contacts (for example, contacts missing the first or last name).
+            private void loadNextContact()
+            {
+                while (nextContact == null && nodeIndex < dataNodes.getLength()) {
+                    nextContact = getNodeAsContact();
+                    nodeIndex++;
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+
+                loadNextContact();
+
+                return (nextContact != null);
+            }
+
+            @Override
+            public Contact next() {
+                loadNextContact();
+
+                Contact contactToReturn = this.nextContact;
+                this.nextContact = null;
+
+                return contactToReturn;
             }
         };
 

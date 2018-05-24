@@ -95,18 +95,41 @@ public class CsvImporter implements IImporter, Iterable<Contact> {
 
                 List<String> parts = SplitStringUtilities.splitCsvString(data.get(currentIndex++));
 
-                contact.setName(new Name(new LastName(parts.get(columnMap.get("Last"))),
-                        new FirstName(parts.get(columnMap.get("First")))));
+                String lastName = parts.get(columnMap.get("Last"));
+                String firstName = parts.get(columnMap.get("First"));
 
-                contact.setAddress(new Address(new StreetAddress(parts.get(columnMap.get("Address"))),
-                        new GeneralProperty(parts.get(columnMap.get("City"))),
-                        new GeneralProperty(parts.get(columnMap.get("State"))),
-                        null,
-                        new GeneralProperty(parts.get(columnMap.get("Zip")))));
+                if (lastName == null || firstName == null || lastName.isEmpty() || firstName.isEmpty()) {
+                    throw new IllegalStateException();
+                }
+                contact.setName(new Name(new LastName(lastName), new FirstName(firstName)));
 
-                contact.setPhone(new PhoneNumber(parts.get(columnMap.get("Phone #"))));
+                String streetAddress = parts.get(columnMap.get("Address"));
+                String city = parts.get(columnMap.get("City"));
+                String state = parts.get(columnMap.get("State"));
+                String zip = parts.get(columnMap.get("Zip"));
 
-                contact.setEmail(new GeneralProperty(parts.get(columnMap.get("E-mail"))));
+                if (streetAddress != null && !streetAddress.isEmpty() &&
+                        city != null && !city.isEmpty() &&
+                        state != null && !state.isEmpty() &&
+                        zip != null && !zip.isEmpty()) {
+                    contact.setAddress(new Address(new StreetAddress(streetAddress),
+                            new GeneralProperty(city),
+                            new GeneralProperty(state),
+                            null,
+                            new GeneralProperty(zip)));
+                }
+
+                String phone = parts.get(columnMap.get("Phone #"));
+
+                if (phone != null && !phone.isEmpty()) {
+                    contact.setPhone(new PhoneNumber(phone));
+                }
+
+                String email = parts.get(columnMap.get("E-mail"));
+
+                if (email != null && !email.isEmpty()) {
+                    contact.setEmail(new GeneralProperty(email));
+                }
 
                 return contact;
             }
