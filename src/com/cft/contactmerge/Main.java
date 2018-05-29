@@ -1,6 +1,6 @@
 package com.cft.contactmerge;
 
-import com.cft.contactmerge.contact.Contact;
+import com.cft.contactmerge.contact.IContact;
 import com.cft.contactmerge.io.CsvImporter;
 import com.cft.contactmerge.io.XmlImporter;
 
@@ -14,7 +14,7 @@ public class Main {
 
         System.out.println("Loading Merge Target...");
 
-        List<Contact> existingContacts = new ArrayList<Contact>();
+        List<IContact> existingContacts = new ArrayList<IContact>();
         XmlImporter existingContactImporter = new XmlImporter();
 
         try {
@@ -26,7 +26,7 @@ public class Main {
             return;
         }
 
-        for (Contact contact: existingContactImporter) {
+        for (IContact contact: existingContactImporter) {
             existingContacts.add(contact);
         }
 
@@ -34,7 +34,7 @@ public class Main {
         System.out.println();
 
         System.out.println("Loading Merge Source...");
-        List<Contact> contactsToMerge = new ArrayList<Contact>();
+        List<IContact> contactsToMerge = new ArrayList<IContact>();
         CsvImporter toMergeImporter = new CsvImporter();
 
         try {
@@ -46,7 +46,7 @@ public class Main {
             return;
         }
 
-        for (Contact contact: toMergeImporter) {
+        for (IContact contact: toMergeImporter) {
             contactsToMerge.add(contact);
         }
 
@@ -54,6 +54,16 @@ public class Main {
         System.out.println();
 
         System.out.println("Comparing Contacts...");
+        MatchMaker matchMaker = new MatchMaker(existingContacts, contactsToMerge);
+        List<ProposedMatch> matches = matchMaker.getProposedMatches();
+
+        for (ProposedMatch match: matches) {
+            System.out.println(String.format("%s has %d proposed matches", match.getContactToMerge().getName(), match.getPossibleTargetContacts().size()));
+        }
+
+        System.out.println();
+
+
         System.out.println("Done");
     }
 }

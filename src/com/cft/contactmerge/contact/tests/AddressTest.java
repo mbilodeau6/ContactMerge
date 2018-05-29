@@ -14,9 +14,9 @@ class AddressTest {
 
     private Address createTestAddress() {
         return new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
+                SharedTestHelpers.createMockContactProperty("10"),
                 SharedTestHelpers.createMockContactProperty("Tucson"),
                 SharedTestHelpers.createMockContactProperty("AZ"),
-                SharedTestHelpers.createMockContactProperty("10"),
                 SharedTestHelpers.createMockContactProperty("85750"));
     }
 
@@ -35,9 +35,10 @@ class AddressTest {
     void Constructor_ApartmentAndZipOptional()
     {
         Address address = new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
+                null,
                 SharedTestHelpers.createMockContactProperty("Tucson"),
                 SharedTestHelpers.createMockContactProperty("AZ"),
-                null, null);
+                null);
 
         assertNotNull(address);
     }
@@ -47,9 +48,10 @@ class AddressTest {
     {
         assertThrows(IllegalArgumentException.class, () ->
                 new Address(null,
+                        null,
                         SharedTestHelpers.createMockContactProperty("Tucson"),
                         SharedTestHelpers.createMockContactProperty("AZ"),
-                        null, null));
+                        null));
     }
 
     @Test
@@ -58,8 +60,9 @@ class AddressTest {
         assertThrows(IllegalArgumentException.class, () ->
                 new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
                         null,
+                        null,
                         SharedTestHelpers.createMockContactProperty("AZ"),
-                        null, null));
+                        null));
     }
 
     @Test
@@ -67,8 +70,9 @@ class AddressTest {
     {
         assertThrows(IllegalArgumentException.class, () ->
                 new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
+                        null,
                         SharedTestHelpers.createMockContactProperty("Tucson"),
-                        null, null, null));
+                        null, null));
     }
 
     /* ----------------------------------------------------------------------------------
@@ -104,7 +108,7 @@ class AddressTest {
 
         IContactProperty<Address> addressToCompareWith = mock(IContactProperty.class);
         when(addressToCompareWith.getValue()).thenReturn(new Address( streetAddressMock,
-                cityMock, stateMock, apartmentMock, zipMock));
+                apartmentMock, cityMock, stateMock, zipMock));
 
         return addressToCompareWith;
     }
@@ -146,7 +150,8 @@ class AddressTest {
             when(zipMock.isMatch(any())).thenReturn(answerTypeForZipIsMatch);
         }
 
-        Address addressWithMockInternals = new Address(streetAddressMock, cityMock, stateMock, apartmentMock, zipMock);
+        Address addressWithMockInternals = new Address(streetAddressMock,
+                apartmentMock, cityMock, stateMock, zipMock);
 
         // Run test
         assertEquals(expectedAnswerType, addressWithMockInternals.isMatch(createAddressStub(targetApartmentSet, targetZipSet)));
@@ -288,15 +293,15 @@ class AddressTest {
     @Test
     void isMatch_Maybe_RealInternalProperties() {
         Address sourceAddress = new Address(new StreetAddress("123 Main St"),
+                null,
                 new GeneralProperty("Tucson"),
                 new GeneralProperty("AZ"),
-                null,
                 null);
 
         Address targetAddress = new Address(new StreetAddress("123 Main St"),
+                new Apartment("10B"),
                 new GeneralProperty("Tucson"),
                 new GeneralProperty("AZ"),
-                new Apartment("10B"),
                 null);
 
         assertEquals(AnswerType.maybe, sourceAddress.isMatch(targetAddress));
@@ -322,9 +327,10 @@ class AddressTest {
     @Test
     void Address_toString_MissingApartmentAndZip() {
         Address address = new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
+                null,
                 SharedTestHelpers.createMockContactProperty("Tucson"),
                 SharedTestHelpers.createMockContactProperty("AZ"),
-                null, null);
+                null);
 
         assertEquals("123 Main St, Tucson, AZ", address.toString());
     }

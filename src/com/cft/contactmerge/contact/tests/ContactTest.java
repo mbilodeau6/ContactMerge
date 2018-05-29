@@ -72,9 +72,9 @@ class ContactTest {
         Contact contact = new Contact();
         contact.setName(new Name(new LastName("Doe"), new FirstName("John")));
         contact.setAddress(new Address(new StreetAddress("123 Main St"),
+                null,
                 new GeneralProperty("Tucson"),
                 new GeneralProperty("AZ"),
-                null,
                 new GeneralProperty("85750")));
         contact.setPhone(new PhoneNumber("(520) 123-4567"));
         contact.setEmail(new GeneralProperty("jdoe@gmail.com"));
@@ -397,9 +397,9 @@ class ContactTest {
         Contact c2 = new Contact();
         c2.setName(new Name(new LastName("Doe"), new FirstName("Adam")));
         c2.setAddress(new Address(new StreetAddress("92 Broadway"),
+                null,
                 new GeneralProperty("Tucson"),
                 new GeneralProperty("AZ"),
-                null,
                 new GeneralProperty("85750")));
         c2.setPhone(new PhoneNumber("(520) 987-6543"));
         c2.setEmail(new GeneralProperty("asmith@homail.com"));
@@ -415,9 +415,9 @@ class ContactTest {
         Contact c2 = new Contact();
         c2.setName(c1.getName());
         c2.setAddress(new Address(new StreetAddress("92 Broadway"),
+                null,
                 new GeneralProperty("Tucson"),
                 new GeneralProperty("AZ"),
-                null,
                 new GeneralProperty("85750")));
         c2.setPhone(c1.getPhone());
         c2.setEmail(new GeneralProperty("asmith@homail.com"));
@@ -431,9 +431,9 @@ class ContactTest {
         Contact c2 = new Contact();
         c2.setName(new Name(new FirstName("Adam"), new LastName("Smith")));
         c2.setAddress(new Address(new StreetAddress("92 Broadway"),
+                null,
                 new GeneralProperty("Tucson"),
                 new GeneralProperty("AZ"),
-                null,
                 new GeneralProperty("85750")));
         c2.setPhone(c1.getPhone());
         c2.setEmail(new GeneralProperty("asmith@homail.com"));
@@ -449,9 +449,9 @@ class ContactTest {
         Contact c2 = new Contact();
         c2.setName(new Name(new FirstName("Adam"), new LastName("Smith")));
         c2.setAddress(new Address(new StreetAddress("123 Main"),
+                null,
                 new GeneralProperty("Tucson"),
                 new GeneralProperty("AZ"),
-                null,
                 new GeneralProperty("85750")));
         c2.setPhone(new PhoneNumber("(520) 987-6543"));
         c2.setEmail(new GeneralProperty("asmith@homail.com"));

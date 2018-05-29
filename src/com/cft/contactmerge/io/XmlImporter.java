@@ -131,9 +131,9 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
                         state != null && !state.isEmpty() &&
                         zip != null && !zip.isEmpty()) {
                     contact.setAddress(new Address(new StreetAddress(streetAddress),
+                            null,
                             new GeneralProperty(city),
                             new GeneralProperty(state),
-                            null,
                             new GeneralProperty(zip)));
                 }
 

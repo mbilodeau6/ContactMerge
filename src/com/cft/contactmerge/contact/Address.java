@@ -12,9 +12,9 @@ public class Address implements IContactProperty<Address> {
     private IContactProperty<String> zip;
 
     public Address(IContactProperty<String> streetAddress,
+                   IContactProperty<String> apartment,
                    IContactProperty<String> city,
                    IContactProperty<String> state,
-                   IContactProperty<String> apartment,
                    IContactProperty<String> zip) {
 
         if (streetAddress == null) {
