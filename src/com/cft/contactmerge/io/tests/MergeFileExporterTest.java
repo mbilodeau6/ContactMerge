@@ -8,6 +8,7 @@ import com.cft.contactmerge.contact.LastName;
 import com.cft.contactmerge.contact.FirstName;
 import com.cft.contactmerge.contact.Address;
 import com.cft.contactmerge.contact.StreetAddress;
+import com.cft.contactmerge.contact.State;
 import com.cft.contactmerge.contact.PhoneNumber;
 import com.cft.contactmerge.contact.GeneralProperty;
 
@@ -86,7 +87,7 @@ class MergeFileExporterTest {
         }
 
         File outputFile = new File(tempFilename);
-        assertEquals(73, outputFile.length() );
+        assertEquals(93, outputFile.length() );
 
         outputFile.delete();
     }
@@ -102,7 +103,7 @@ class MergeFileExporterTest {
             newContact.setAddress(new Address(new StreetAddress(streetAddress),
                     null,
                     new GeneralProperty("Tucson"),
-                    new GeneralProperty("AZ"),
+                    new State("AZ"),
                     new GeneralProperty("85750")));
         }
 
@@ -162,9 +163,9 @@ class MergeFileExporterTest {
         }
 
         File outputFile = new File(tempFilename);
-        assertEquals(451, outputFile.length() );
+        assertEquals(528, outputFile.length() );
 
-        outputFile.delete();
+//        outputFile.delete();
     }
 
     @Test

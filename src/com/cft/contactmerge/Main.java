@@ -2,6 +2,8 @@ package com.cft.contactmerge;
 
 import com.cft.contactmerge.contact.IContact;
 import com.cft.contactmerge.io.CsvImporter;
+import com.cft.contactmerge.io.MergeFileExporter;
+import com.cft.contactmerge.io.SupportedFileType;
 import com.cft.contactmerge.io.XmlImporter;
 
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         System.out.println("Loading Merge Target...");
 
@@ -18,7 +20,7 @@ public class Main {
         XmlImporter existingContactImporter = new XmlImporter();
 
         try {
-            existingContactImporter.Load("C:\\src\\ContactMerge\\Documentation\\SampleData\\GiftWorksDonors.xml");
+            existingContactImporter.Load("C:\\Users\\mbilo\\Documents\\ITK\\Data\\allDonors.xml");
         }
         catch (IOException e)
         {
@@ -38,7 +40,7 @@ public class Main {
         CsvImporter toMergeImporter = new CsvImporter();
 
         try {
-            toMergeImporter.Load("C:\\src\\ContactMerge\\Documentation\\SampleData\\BidPalAttendees.csv");
+            toMergeImporter.Load("C:\\Users\\mbilo\\Documents\\ITK\\Data\\Gala2018Attendees.csv");
         }
         catch (IOException e)
         {
@@ -56,6 +58,11 @@ public class Main {
         System.out.println("Comparing Contacts...");
         MatchMaker matchMaker = new MatchMaker(existingContacts, contactsToMerge);
         List<ProposedMatch> matches = matchMaker.getProposedMatches();
+
+        MergeFileExporter exporter = new MergeFileExporter(matches);
+        exporter.createMergeFile(SupportedFileType.TSV,
+                "C:\\Users\\mbilo\\Documents\\ITK\\Data\\TestMergeRecommendations.tsv",
+                null);
 
         for (ProposedMatch match: matches) {
             System.out.println(String.format("%s has %d proposed matches", match.getContactToMerge().getName(), match.getPossibleTargetContacts().size()));

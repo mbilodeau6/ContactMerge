@@ -6,6 +6,8 @@ package com.cft.contactmerge.io;
 
 import java.io.*;
 import java.util.Collection;
+
+import com.cft.contactmerge.contact.ContactMatchType;
 import com.cft.contactmerge.contact.IContact;
 import com.cft.contactmerge.ProposedMatch;
 import com.cft.contactmerge.ColumnMap;
@@ -23,9 +25,10 @@ public class MergeFileExporter{
         this.proposedMatches = proposedMatches;
     }
 
-    private void writeContact(BufferedWriter writer, IContact contact, boolean contactToMerge)
+    private void writeContact(BufferedWriter writer, IContact contact, boolean contactToMerge,
+                              ContactMatchType matchType)
             throws IOException {
-        writer.write( String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
+        writer.write( String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
                 contact.getName().getValue().getLastName(),
                 contact.getName().getValue().getFirstName(),
                 contact.getAddress() == null ? "" : contact.getAddress().getValue().getStreetAddress(),
@@ -34,7 +37,9 @@ public class MergeFileExporter{
                 contact.getAddress() == null ? "" : contact.getAddress().getValue().getZip(),
                 contact.getPhone() == null ? "" : contact.getPhone(),
                 contact.getEmail() == null ? "" : contact.getEmail(),
-                contactToMerge == true ? "Yes" : "No"));
+                contactToMerge == true ? "Yes" : "No",
+                contact.containsProperty("ContactId") ? contact.getPropertyValue("ContactId"): "",
+                matchType == null ? "" : matchType.toString()));
         writer.newLine();
     }
 
@@ -56,14 +61,14 @@ public class MergeFileExporter{
         FileWriter fw = new FileWriter(filename);
 
         try (BufferedWriter writer = new BufferedWriter(fw)) {
-            writer.write("LastName\tFirstName\tStreetName\tCity\tState\tZip\tPhone\tEmail\tContactToMerge");
+            writer.write("LastName\tFirstName\tStreetName\tCity\tState\tZip\tPhone\tEmail\tContactToMerge\tContactId\tMatchType");
             writer.newLine();
             for(ProposedMatch match: proposedMatches) {
                 IContact contactToMerge = match.getContactToMerge();
-                writeContact(writer, contactToMerge, true);
+                writeContact(writer, contactToMerge, true, null);
 
                 for(IContact possibleMatch: match.getPossibleTargetContacts()) {
-                    writeContact(writer, possibleMatch, false);
+                    writeContact(writer, possibleMatch, false, contactToMerge.compareTo(possibleMatch).getMatchType());
                 }
             }
         }

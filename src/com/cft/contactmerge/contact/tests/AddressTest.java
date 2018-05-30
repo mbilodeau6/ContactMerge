@@ -12,11 +12,18 @@ import static org.mockito.Mockito.when;
 
 class AddressTest {
 
+    private State createMockState() {
+        State stateMock = mock(State.class);
+        when(stateMock.getValue()).thenReturn("AZ");
+
+        return stateMock;
+    }
     private Address createTestAddress() {
+
         return new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
                 SharedTestHelpers.createMockContactProperty("10"),
                 SharedTestHelpers.createMockContactProperty("Tucson"),
-                SharedTestHelpers.createMockContactProperty("AZ"),
+                createMockState(),
                 SharedTestHelpers.createMockContactProperty("85750"));
     }
 
@@ -37,7 +44,7 @@ class AddressTest {
         Address address = new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
                 null,
                 SharedTestHelpers.createMockContactProperty("Tucson"),
-                SharedTestHelpers.createMockContactProperty("AZ"),
+                createMockState(),
                 null);
 
         assertNotNull(address);
@@ -50,7 +57,7 @@ class AddressTest {
                 new Address(null,
                         null,
                         SharedTestHelpers.createMockContactProperty("Tucson"),
-                        SharedTestHelpers.createMockContactProperty("AZ"),
+                        createMockState(),
                         null));
     }
 
@@ -61,7 +68,7 @@ class AddressTest {
                 new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
                         null,
                         null,
-                        SharedTestHelpers.createMockContactProperty("AZ"),
+                        createMockState(),
                         null));
     }
 
@@ -90,8 +97,8 @@ class AddressTest {
         IContactProperty<String> cityMock = mock(IContactProperty.class);
         when(cityMock.getValue()).thenReturn("This is where you would find City value");
 
-        IContactProperty<String> stateMock = mock(IContactProperty.class);
-        when(stateMock.getValue()).thenReturn("This is where you would find the State value");
+        State stateMock = mock(State.class);
+        when(stateMock.getValue()).thenReturn("This is where you would find State value");
 
         IContactProperty<String> apartmentMock = null;
 
@@ -131,7 +138,7 @@ class AddressTest {
         IContactProperty cityMock = mock(IContactProperty.class);
         when(cityMock.isMatch(any())).thenReturn(answerTypeForCityIsMatch);
 
-        IContactProperty stateMock = mock(IContactProperty.class);
+        State stateMock = mock(State.class);
         when(stateMock.isMatch(any())).thenReturn(answerTypeForStateIsMatch);
 
         IContactProperty apartmentMock = null;
@@ -295,13 +302,13 @@ class AddressTest {
         Address sourceAddress = new Address(new StreetAddress("123 Main St"),
                 null,
                 new GeneralProperty("Tucson"),
-                new GeneralProperty("AZ"),
+                new State("AZ"),
                 null);
 
         Address targetAddress = new Address(new StreetAddress("123 Main St"),
                 new Apartment("10B"),
                 new GeneralProperty("Tucson"),
-                new GeneralProperty("AZ"),
+                new State("AZ"),
                 null);
 
         assertEquals(AnswerType.maybe, sourceAddress.isMatch(targetAddress));
@@ -329,7 +336,7 @@ class AddressTest {
         Address address = new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
                 null,
                 SharedTestHelpers.createMockContactProperty("Tucson"),
-                SharedTestHelpers.createMockContactProperty("AZ"),
+                createMockState(),
                 null);
 
         assertEquals("123 Main St, Tucson, AZ", address.toString());

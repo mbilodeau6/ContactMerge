@@ -3,7 +3,7 @@ package com.cft.contactmerge.contact;
 import com.cft.contactmerge.AnswerType;
 
 public class GeneralProperty implements IContactProperty<String> {
-    private String value;
+    protected String value;
 
     public GeneralProperty(String value)
     {

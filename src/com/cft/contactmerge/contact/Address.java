@@ -8,13 +8,13 @@ public class Address implements IContactProperty<Address> {
     private IContactProperty<String> streetAddress;
     private IContactProperty<String> apartment;
     private IContactProperty<String> city;
-    private IContactProperty<String> state;
+    private State state;
     private IContactProperty<String> zip;
 
     public Address(IContactProperty<String> streetAddress,
                    IContactProperty<String> apartment,
                    IContactProperty<String> city,
-                   IContactProperty<String> state,
+                   State state,
                    IContactProperty<String> zip) {
 
         if (streetAddress == null) {
@@ -22,11 +22,11 @@ public class Address implements IContactProperty<Address> {
         }
 
         if (city == null) {
-            throw new IllegalArgumentException("streetAddress is required");
+            throw new IllegalArgumentException("city is required");
         }
 
         if (state == null) {
-            throw new IllegalArgumentException("streetAddress is required");
+            throw new IllegalArgumentException("state is required");
         }
 
         this.streetAddress = streetAddress;
@@ -127,7 +127,7 @@ public class Address implements IContactProperty<Address> {
         return this.city;
     }
 
-    public IContactProperty<String> getState()
+    public State getState()
     {
         return this.state;
     }

@@ -115,7 +115,7 @@ public class CsvImporter implements IImporter, Iterable<Contact> {
                     contact.setAddress(new Address(new StreetAddress(streetAddress),
                             null,
                             new GeneralProperty(city),
-                            new GeneralProperty(state),
+                            new State(state),
                             new GeneralProperty(zip)));
                 }
 
@@ -129,6 +129,13 @@ public class CsvImporter implements IImporter, Iterable<Contact> {
 
                 if (email != null && !email.isEmpty()) {
                     contact.setEmail(new GeneralProperty(email));
+                }
+
+                // TODO: When column maps are supported, should pull in identified properties
+                String propertyValue = parts.get(columnMap.get("Bidder #"));
+
+                if (propertyValue != null) {
+                    contact.setPropertyValue("ContactId", propertyValue);
                 }
 
                 return contact;
