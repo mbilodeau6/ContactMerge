@@ -10,11 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class XmlImporterTest {
 
-    private String getVerificationMessage(String item)
-    {
-        return String.format("Verify %s", item);
-    }
-
     /* --------------------------------------------------------------------------------
      * Testing Load(filename)
      * -------------------------------------------------------------------------------- */
@@ -156,16 +151,21 @@ class XmlImporterTest {
         int i = 0;
         for (Contact contact : importer)
         {
-            assertEquals(lastNames.get(i), contact.getName().getValue().getLastName().getValue(), getVerificationMessage(String.format("lastNames[%d]", i)));
-            assertEquals(firstNames.get(i), contact.getName().getValue().getFirstName().getValue(), getVerificationMessage(String.format("firstNames[%d]", i)));
-            assertEquals(addresses.get(i), contact.getAddress().getValue().getStreetAddress().getValue(), getVerificationMessage(String.format("addresses[%d]", i)));
-            assertEquals(phones.get(i), contact.getPhone().getValue(), getVerificationMessage(String.format("phones[%d]", i)));
-            assertEquals(emails.get(i), contact.getEmail().getValue(), getVerificationMessage(String.format("emails[%d]", i)));
+            assertEquals(lastNames.get(i), contact.getName().getValue().getLastName().getValue(),
+                    String.format("Verify lastNames[%d]", i));
+            assertEquals(firstNames.get(i), contact.getName().getValue().getFirstName().getValue(),
+                    String.format("Verify firstNames[%d]", i));
+            assertEquals(addresses.get(i), contact.getAddress().getValue().getStreetAddress().getValue(),
+                    String.format("Verify addresses[%d]", i));
+            assertEquals(phones.get(i), contact.getPhone().getValue(),
+                    String.format("Verify phones[%d]", i));
+            assertEquals(emails.get(i), contact.getEmail().getValue(),
+                    String.format("Verify emails[%d]", i));
 
             i++;
         }
 
-        assertEquals(2, i, getVerificationMessage("contact count"));
+        assertEquals(2, i, "Verify contact count");
     }
 
     @Test
@@ -184,13 +184,15 @@ class XmlImporterTest {
         int i = 0;
         for (Contact contact : importer)
         {
-            assertEquals("Smith", contact.getName().getValue().getLastName().getValue(), getVerificationMessage(String.format("lastNames[%d]", i)));
-            assertEquals("Adam", contact.getName().getValue().getFirstName().getValue(), getVerificationMessage(String.format("firstNames[%d]", i)));
+            assertEquals("Smith", contact.getName().getValue().getLastName().getValue(),
+                    String.format("Verify lastNames[%d]", i));
+            assertEquals("Adam", contact.getName().getValue().getFirstName().getValue(),
+                    String.format("Verify firstNames[%d]", i));
 
             i++;
         }
 
-        assertEquals(1, i, getVerificationMessage("contact count"));
+        assertEquals(1, i, "Verify contact count");
     }
 
     private void RunMissingDataTest(boolean streetAddressSpecified,

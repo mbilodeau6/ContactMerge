@@ -40,7 +40,7 @@ class ProposedMatchTest {
         Contact expectedContactToMerge = new Contact();
         expectedContactToMerge.setName(new Name(new FirstName("John"), new LastName("Doe")));
         expectedContactToMerge.setAddress(new Address(new StreetAddress("123 Main St"),
-                null, new GeneralProperty("Tucson"), new GeneralProperty("AZ"), null));
+                null, new GeneralProperty("Tucson"), new State("AZ"), null));
         expectedContactToMerge.setPhone(new PhoneNumber("(520) 555-1234"));
 
         ProposedMatch proposedMatch = new ProposedMatch(expectedContactToMerge, new ArrayList<IContact>());

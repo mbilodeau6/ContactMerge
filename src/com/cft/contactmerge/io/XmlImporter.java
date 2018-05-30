@@ -133,7 +133,7 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
                     contact.setAddress(new Address(new StreetAddress(streetAddress),
                             null,
                             new GeneralProperty(city),
-                            new GeneralProperty(state),
+                            new State(state),
                             new GeneralProperty(zip)));
                 }
 
@@ -147,6 +147,13 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
 
                 if (email != null && !email.isEmpty()) {
                     contact.setEmail(new GeneralProperty(email));
+                }
+
+                // TODO: Once column map is added we will want to add all properties
+                String propertyValue = data.get(columnMap.get("donor_donorid"));
+
+                if (propertyValue != null) {
+                    contact.setPropertyValue("ContactId", propertyValue);
                 }
 
                 return contact;
