@@ -134,7 +134,7 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
                             null,
                             new GeneralProperty(city),
                             new State(state),
-                            new GeneralProperty(zip)));
+                            new Zip(zip)));
                 }
 
                 String phone = data.get(columnMap.get("donor_phone"));

@@ -9,6 +9,7 @@ import com.cft.contactmerge.contact.FirstName;
 import com.cft.contactmerge.contact.Address;
 import com.cft.contactmerge.contact.StreetAddress;
 import com.cft.contactmerge.contact.State;
+import com.cft.contactmerge.contact.Zip;
 import com.cft.contactmerge.contact.PhoneNumber;
 import com.cft.contactmerge.contact.GeneralProperty;
 
@@ -104,7 +105,7 @@ class MergeFileExporterTest {
                     null,
                     new GeneralProperty("Tucson"),
                     new State("AZ"),
-                    new GeneralProperty("85750")));
+                    new Zip("85750")));
         }
 
         if (phoneNumber != null) {

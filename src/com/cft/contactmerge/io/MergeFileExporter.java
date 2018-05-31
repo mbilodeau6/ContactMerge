@@ -6,6 +6,8 @@ package com.cft.contactmerge.io;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.cft.contactmerge.contact.ContactMatchType;
 import com.cft.contactmerge.contact.IContact;
@@ -43,6 +45,40 @@ public class MergeFileExporter{
         writer.newLine();
     }
 
+    private void writeMatches(BufferedWriter writer, IContact contactToMerge, Collection<IContact> possibleMatches)
+            throws IOException {
+
+        // Sort matches
+        List<IContact> sortedMatches =
+                possibleMatches.stream().
+                        filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.Identical).
+                        collect(Collectors.toList());
+
+        sortedMatches.addAll(possibleMatches.stream().
+                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.Match).
+                collect(Collectors.toList()));
+
+        sortedMatches.addAll(possibleMatches.stream().
+                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.MatchButModifying).
+                collect(Collectors.toList()));
+
+        sortedMatches.addAll(possibleMatches.stream().
+                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.PotentialMatch).
+                collect(Collectors.toList()));
+
+        sortedMatches.addAll(possibleMatches.stream().
+                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.Related).
+                collect(Collectors.toList()));
+
+        sortedMatches.addAll(possibleMatches.stream().
+                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.PotentiallyRelated).
+                collect(Collectors.toList()));
+
+        for (IContact possibleMatch : sortedMatches) {
+            writeContact(writer, possibleMatch, false, contactToMerge.compareTo(possibleMatch).getMatchType());
+        }
+    }
+
     public void createMergeFile(SupportedFileType fileType, String filename, Collection<ColumnMap> columnMaps)
             throws IOException {
         if (filename == null || filename.trim() == "")
@@ -60,6 +96,9 @@ public class MergeFileExporter{
 
         FileWriter fw = new FileWriter(filename);
 
+        // TODO: The long term plan is to have the program spit out a file that can be imported
+        // into the target system but for now we are creating a file that lists all of the
+        // potential matches.
         try (BufferedWriter writer = new BufferedWriter(fw)) {
             writer.write("LastName\tFirstName\tStreetName\tCity\tState\tZip\tPhone\tEmail\tContactToMerge\tContactId\tMatchType");
             writer.newLine();
@@ -67,9 +106,7 @@ public class MergeFileExporter{
                 IContact contactToMerge = match.getContactToMerge();
                 writeContact(writer, contactToMerge, true, null);
 
-                for(IContact possibleMatch: match.getPossibleTargetContacts()) {
-                    writeContact(writer, possibleMatch, false, contactToMerge.compareTo(possibleMatch).getMatchType());
-                }
+                writeMatches(writer, contactToMerge, match.getPossibleTargetContacts());
             }
         }
     }

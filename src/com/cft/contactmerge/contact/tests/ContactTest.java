@@ -75,7 +75,7 @@ class ContactTest {
                 null,
                 new GeneralProperty("Tucson"),
                 new State("AZ"),
-                new GeneralProperty("85750")));
+                new Zip("85750")));
         contact.setPhone(new PhoneNumber("(520) 123-4567"));
         contact.setEmail(new GeneralProperty("jdoe@gmail.com"));
 
@@ -400,7 +400,7 @@ class ContactTest {
                 null,
                 new GeneralProperty("Tucson"),
                 new State("AZ"),
-                new GeneralProperty("85750")));
+                new Zip("85750")));
         c2.setPhone(new PhoneNumber("(520) 987-6543"));
         c2.setEmail(new GeneralProperty("asmith@homail.com"));
 
@@ -418,7 +418,7 @@ class ContactTest {
                 null,
                 new GeneralProperty("Tucson"),
                 new State("AZ"),
-                new GeneralProperty("85750")));
+                new Zip("85750")));
         c2.setPhone(c1.getPhone());
         c2.setEmail(new GeneralProperty("asmith@homail.com"));
 
@@ -434,7 +434,7 @@ class ContactTest {
                 null,
                 new GeneralProperty("Tucson"),
                 new State("AZ"),
-                new GeneralProperty("85750")));
+                new Zip("85750")));
         c2.setPhone(c1.getPhone());
         c2.setEmail(new GeneralProperty("asmith@homail.com"));
 
@@ -447,16 +447,43 @@ class ContactTest {
 
         // Address is same but without the street type
         Contact c2 = new Contact();
-        c2.setName(new Name(new FirstName("Adam"), new LastName("Smith")));
+        c2.setName(new Name(new LastName("Smth"), new FirstName("Adam")));
         c2.setAddress(new Address(new StreetAddress("123 Main"),
                 null,
                 new GeneralProperty("Tucson"),
                 new State("AZ"),
-                new GeneralProperty("85750")));
+                new Zip("85750")));
         c2.setPhone(new PhoneNumber("(520) 987-6543"));
         c2.setEmail(new GeneralProperty("asmith@homail.com"));
 
         assertEquals(ContactMatchType.PotentiallyRelated, c1.compareTo(c2).getMatchType());
+    }
+
+    // Test to try real contacts and help determine why we are not getting expected
+    // result
+    @Test
+    void compareTo_TestRealContacts() {
+        Contact c1 = new Contact();
+        c1.setName(new Name(new LastName("Scotinsky"), new FirstName("Sonya")));
+        c1.setAddress(new Address(new StreetAddress("2810 E 4th St"),
+                null,
+                new GeneralProperty("Tucson"),
+                new State("AZ"),
+                new Zip("85716")));
+        c1.setPhone(new PhoneNumber("(520) 909-7177"));
+        c1.setEmail(new GeneralProperty("sonya@forsarchitecture.com"));
+
+        Contact c2 = new Contact();
+        c2.setName(new Name(new LastName("Fuentevilla"), new FirstName("Siena")));
+        c2.setAddress(new Address(new StreetAddress("2810 E 4th St"),
+                null,
+                new GeneralProperty("Tucson"),
+                new State("AZ"),
+                new Zip("85716-4422")));
+        c2.setPhone(new PhoneNumber("(520) 870-7454"));
+        c2.setEmail(new GeneralProperty("18sfuentevilla@salpointe.org"));
+
+        assertEquals(ContactMatchType.Related, c1.compareTo(c2).getMatchType());
     }
 
     @Test

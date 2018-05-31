@@ -18,13 +18,21 @@ class AddressTest {
 
         return stateMock;
     }
+
+    private Zip createMockZip() {
+        Zip zipMock = mock(Zip.class);
+        when(zipMock.getValue()).thenReturn("85750");
+
+        return zipMock;
+    }
+
     private Address createTestAddress() {
 
         return new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
                 SharedTestHelpers.createMockContactProperty("10"),
                 SharedTestHelpers.createMockContactProperty("Tucson"),
                 createMockState(),
-                SharedTestHelpers.createMockContactProperty("85750"));
+                createMockZip());
     }
 
     /* -------------------------------------------------------------------------------------
@@ -107,9 +115,9 @@ class AddressTest {
             when(apartmentMock.getValue()).thenReturn("This is where you would find Apartment value");
         }
 
-        IContactProperty<String> zipMock = null;
+        Zip zipMock = null;
         if (zipSet) {
-            zipMock = mock(IContactProperty.class);
+            zipMock = mock(Zip.class);
             when(zipMock.getValue()).thenReturn("This is where you would find the Zip value");
         }
 
@@ -149,11 +157,11 @@ class AddressTest {
             when(apartmentMock.isMatch(any())).thenReturn(answerTypeForApartmentIsMatch);
         }
 
-        IContactProperty zipMock = null;
+        Zip zipMock = null;
         boolean sourceZipSet = answerTypeForZipIsMatch != null;
 
         if (sourceZipSet) {
-            zipMock = mock(IContactProperty.class);
+            zipMock = mock(Zip.class);
             when(zipMock.isMatch(any())).thenReturn(answerTypeForZipIsMatch);
         }
 
