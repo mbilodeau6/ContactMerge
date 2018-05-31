@@ -86,4 +86,8 @@ public class PropertyMatchingHelpers {
 
         return PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(sourceParts, targetParts);
     }
+
+    public static boolean containsAlpha(String string) {
+        return string.matches(".*[a-zA-Z].*");
+    }
 }

@@ -90,24 +90,11 @@ public class State extends GeneralProperty {
             nameToAbbreviationMap.put("saskatchewan", "SK");
             nameToAbbreviationMap.put("yukon", "YT");
         }
-    }
-
-    @Override
-    public String getValue() {
 
         String lowerCaseValue = this.value.toLowerCase();
-        if (nameToAbbreviationMap.containsKey(lowerCaseValue)) {
-            return nameToAbbreviationMap.get(lowerCaseValue);
-        }
-        return value;
-    }
 
-    @Override
-    public String toString() {
-        String lowerCaseValue = this.value.toLowerCase();
         if (nameToAbbreviationMap.containsKey(lowerCaseValue)) {
-            return nameToAbbreviationMap.get(lowerCaseValue);
+            this.value = nameToAbbreviationMap.get(lowerCaseValue);
         }
-        return value;
     }
 }

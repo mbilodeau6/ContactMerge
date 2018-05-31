@@ -282,6 +282,18 @@ class PropertyMatchingHelpersTest {
         assertEquals(AnswerType.no, PropertyMatchingHelpers.doNamePartsMatch("Lee", "Kathleen"));
     }
 
+    @Test
+    void containsAlpha_false() {
+        assertFalse(PropertyMatchingHelpers.containsAlpha("85750-1234"));
+    }
 
+    @Test
+    void containsAlpha_true_lowerCase() {
+        assertTrue(PropertyMatchingHelpers.containsAlpha("85750a1234"));
+    }
 
+    @Test
+    void containsAlpha_true_upperCase() {
+        assertTrue(PropertyMatchingHelpers.containsAlpha("85750Z"));
+    }
 }

@@ -116,7 +116,7 @@ public class CsvImporter implements IImporter, Iterable<Contact> {
                             null,
                             new GeneralProperty(city),
                             new State(state),
-                            new GeneralProperty(zip)));
+                            new Zip(zip)));
                 }
 
                 String phone = parts.get(columnMap.get("Phone #"));

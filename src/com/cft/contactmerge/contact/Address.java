@@ -9,13 +9,13 @@ public class Address implements IContactProperty<Address> {
     private IContactProperty<String> apartment;
     private IContactProperty<String> city;
     private State state;
-    private IContactProperty<String> zip;
+    private Zip zip;
 
     public Address(IContactProperty<String> streetAddress,
                    IContactProperty<String> apartment,
                    IContactProperty<String> city,
                    State state,
-                   IContactProperty<String> zip) {
+                   Zip zip) {
 
         if (streetAddress == null) {
             throw new IllegalArgumentException("streetAddress is required");
