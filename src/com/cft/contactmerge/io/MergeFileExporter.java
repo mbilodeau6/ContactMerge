@@ -60,10 +60,7 @@ public class MergeFileExporter{
 
     private void writeMatches(BufferedWriter writer, ProposedMatch match, MatchAction action)
             throws IOException {
-
-        List<IContact> sortedMatches = ContactMatchingHelpers.sortPossibleMatches(match);
-
-        for (IContact possibleMatch : sortedMatches) {
+        for (IContact possibleMatch : match.getPossibleTargetContacts()) {
             ContactMatchType matchType = match.getContactToMerge().compareTo(possibleMatch).getMatchType();
             writeMatchingContact(writer, possibleMatch, matchType, action);
         }

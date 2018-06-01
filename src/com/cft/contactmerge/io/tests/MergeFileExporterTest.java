@@ -88,7 +88,7 @@ class MergeFileExporterTest {
         }
 
         File outputFile = new File(tempFilename);
-        assertEquals(93, outputFile.length() );
+        assertEquals(108, outputFile.length() );
 
         outputFile.delete();
     }
@@ -164,7 +164,7 @@ class MergeFileExporterTest {
         }
 
         File outputFile = new File(tempFilename);
-        assertEquals(528, outputFile.length() );
+        assertEquals(582, outputFile.length() );
 
 //        outputFile.delete();
     }

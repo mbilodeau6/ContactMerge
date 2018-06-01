@@ -8,13 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ContactMatchingHelpers {
-    public static List<IContact> sortPossibleMatches(ProposedMatch match) {
-        assert(match != null);
-        assert(match.getContactToMerge() != null);
-        assert(match.getPossibleTargetContacts() != null);
-
-        IContact contactToMerge = match.getContactToMerge();
-        List<IContact> possibleMatches = match.getPossibleTargetContacts();
+    public static List<IContact> sortPossibleMatches(IContact contactToMerge, List<IContact> possibleMatches) {
+        assert(contactToMerge != null);
+        assert(possibleMatches != null);
 
         List<IContact> sortedMatches =
                 possibleMatches.stream().
@@ -53,7 +49,7 @@ public class ContactMatchingHelpers {
     public static MatchAction getSuggestedAction(ProposedMatch match) {
         assert(match != null);
 
-        List<IContact> sortedMatches = sortPossibleMatches(match);
+        List<IContact> sortedMatches = sortPossibleMatches(match.getContactToMerge(), match.getPossibleTargetContacts());
 
         if (sortedMatches.size() == 0) {
             if (hasContactInfo(match.getContactToMerge())) {
