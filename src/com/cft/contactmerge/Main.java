@@ -64,10 +64,6 @@ public class Main {
                 "C:\\Users\\mbilo\\Documents\\ITK\\Data\\TestMergeRecommendations.tsv",
                 null);
 
-        for (ProposedMatch match: matches) {
-            System.out.println(String.format("%s has %d proposed matches", match.getContactToMerge().getName(), match.getPossibleTargetContacts().size()));
-        }
-
         System.out.println();
 
 

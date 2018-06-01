@@ -43,10 +43,9 @@ class ContactMatchingHelpersTest {
     void sortPossibleMatches_emptyList() {
         IContact contactToMerge = mock(IContact.class);
         List<IContact> possibleTargetContacts = new ArrayList<IContact>();
-        ProposedMatch proposedMatch = new ProposedMatch(contactToMerge, possibleTargetContacts);
 
         // Call method under test
-        List<IContact> sortedContacts = ContactMatchingHelpers.sortPossibleMatches(proposedMatch);
+        List<IContact> sortedContacts = ContactMatchingHelpers.sortPossibleMatches(contactToMerge, possibleTargetContacts);
 
         // Verify that returned list is in expected order.
         assertEquals(0, sortedContacts.size(), "Verify sorted list size");
@@ -71,7 +70,7 @@ class ContactMatchingHelpersTest {
         ProposedMatch proposedMatch = createProposedMatchWithMockContacts(desiredMatchTypes);
 
                 // Call method under test
-        List<IContact> sortedContacts = ContactMatchingHelpers.sortPossibleMatches(proposedMatch);
+        List<IContact> sortedContacts = ContactMatchingHelpers.sortPossibleMatches(proposedMatch.getContactToMerge(), proposedMatch.getPossibleTargetContacts());
 
         // Verify that returned list is in expected order.
         assertEquals(6, sortedContacts.size(), "Verify sorted list size");
