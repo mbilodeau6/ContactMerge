@@ -1,5 +1,6 @@
 package com.cft.contactmerge;
 
+import com.cft.contactmerge.contact.ContactMatchType;
 import com.cft.contactmerge.contact.IContact;
 import com.cft.contactmerge.io.CsvImporter;
 import com.cft.contactmerge.io.MergeFileExporter;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
 
         System.out.println("Loading Merge Target...");

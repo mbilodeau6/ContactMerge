@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.cft.contactmerge.contact.ContactMatchType;
+import com.cft.contactmerge.contact.ContactMatchingHelpers;
+import com.cft.contactmerge.contact.MatchAction;
 import com.cft.contactmerge.contact.IContact;
 import com.cft.contactmerge.ProposedMatch;
 import com.cft.contactmerge.ColumnMap;
@@ -27,10 +29,20 @@ public class MergeFileExporter{
         this.proposedMatches = proposedMatches;
     }
 
-    private void writeContact(BufferedWriter writer, IContact contact, boolean contactToMerge,
-                              ContactMatchType matchType)
+    private void writeContactToMerge(BufferedWriter writer, IContact contact, MatchAction action)
             throws IOException {
-        writer.write( String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
+        writeContact(writer, contact, true, null, action);
+    }
+
+    private void writeMatchingContact(BufferedWriter writer, IContact contact, ContactMatchType matchType, MatchAction action)
+            throws IOException {
+        writeContact(writer, contact, false, matchType, action);
+    }
+
+    private void writeContact(BufferedWriter writer, IContact contact, boolean contactToMerge,
+                              ContactMatchType matchType, MatchAction action)
+            throws IOException {
+        writer.write( String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
                 contact.getName().getValue().getLastName(),
                 contact.getName().getValue().getFirstName(),
                 contact.getAddress() == null ? "" : contact.getAddress().getValue().getStreetAddress(),
@@ -41,41 +53,19 @@ public class MergeFileExporter{
                 contact.getEmail() == null ? "" : contact.getEmail(),
                 contactToMerge == true ? "Yes" : "No",
                 contact.containsProperty("ContactId") ? contact.getPropertyValue("ContactId"): "",
-                matchType == null ? "" : matchType.toString()));
+                matchType == null ? "" : matchType.toString(),
+                action == null ? "" : action.toString()));
         writer.newLine();
     }
 
-    private void writeMatches(BufferedWriter writer, IContact contactToMerge, Collection<IContact> possibleMatches)
+    private void writeMatches(BufferedWriter writer, ProposedMatch match, MatchAction action)
             throws IOException {
 
-        // Sort matches
-        List<IContact> sortedMatches =
-                possibleMatches.stream().
-                        filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.Identical).
-                        collect(Collectors.toList());
-
-        sortedMatches.addAll(possibleMatches.stream().
-                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.Match).
-                collect(Collectors.toList()));
-
-        sortedMatches.addAll(possibleMatches.stream().
-                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.MatchButModifying).
-                collect(Collectors.toList()));
-
-        sortedMatches.addAll(possibleMatches.stream().
-                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.PotentialMatch).
-                collect(Collectors.toList()));
-
-        sortedMatches.addAll(possibleMatches.stream().
-                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.Related).
-                collect(Collectors.toList()));
-
-        sortedMatches.addAll(possibleMatches.stream().
-                filter(x -> contactToMerge.compareTo(x).getMatchType() == ContactMatchType.PotentiallyRelated).
-                collect(Collectors.toList()));
+        List<IContact> sortedMatches = ContactMatchingHelpers.sortPossibleMatches(match);
 
         for (IContact possibleMatch : sortedMatches) {
-            writeContact(writer, possibleMatch, false, contactToMerge.compareTo(possibleMatch).getMatchType());
+            ContactMatchType matchType = match.getContactToMerge().compareTo(possibleMatch).getMatchType();
+            writeMatchingContact(writer, possibleMatch, matchType, action);
         }
     }
 
@@ -100,13 +90,15 @@ public class MergeFileExporter{
         // into the target system but for now we are creating a file that lists all of the
         // potential matches.
         try (BufferedWriter writer = new BufferedWriter(fw)) {
-            writer.write("LastName\tFirstName\tStreetName\tCity\tState\tZip\tPhone\tEmail\tContactToMerge\tContactId\tMatchType");
+            writer.write("LastName\tFirstName\tStreetName\tCity\tState\tZip\tPhone\tEmail\tContactToMerge\tContactId\tMatchType\tProposedAction");
             writer.newLine();
             for(ProposedMatch match: proposedMatches) {
                 IContact contactToMerge = match.getContactToMerge();
-                writeContact(writer, contactToMerge, true, null);
 
-                writeMatches(writer, contactToMerge, match.getPossibleTargetContacts());
+                MatchAction suggestedAction = ContactMatchingHelpers.getSuggestedAction(match);
+                writeContactToMerge(writer, contactToMerge, suggestedAction);
+
+                writeMatches(writer, match, suggestedAction);
             }
         }
     }
