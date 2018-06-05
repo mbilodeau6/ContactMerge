@@ -11,9 +11,9 @@ public class Address implements IContactProperty<Address> {
     private State state;
     private Zip zip;
 
-    public Address(IContactProperty<String> streetAddress,
-                   IContactProperty<String> apartment,
-                   IContactProperty<String> city,
+    public Address(StreetAddress streetAddress,
+                   Apartment apartment,
+                   GeneralProperty city,
                    State state,
                    Zip zip) {
 

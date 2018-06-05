@@ -7,8 +7,8 @@ public interface IContact {
     public void setAddress(IContactProperty<Address> address);
     public IContactProperty<Address> getAddress();
 
-    public void setPhone(IContactProperty<String> phone);
-    public IContactProperty<String> getPhone();
+    public void setPhone(PhoneNumber phone);
+    public PhoneNumber getPhone();
 
     public void setEmail(IContactProperty<String> email);
     public IContactProperty<String> getEmail();

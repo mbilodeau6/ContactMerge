@@ -12,6 +12,27 @@ import static org.mockito.Mockito.when;
 
 class AddressTest {
 
+    private StreetAddress createMockStreetAddress() {
+        StreetAddress streetAddressMock = mock(StreetAddress.class);
+        when(streetAddressMock.getValue()).thenReturn("123 Main St");
+
+        return streetAddressMock;
+    }
+
+    private Apartment createMockApartment() {
+        Apartment apartmentMock = mock(Apartment.class);
+        when(apartmentMock.getValue()).thenReturn("10");
+
+        return apartmentMock;
+    }
+
+    private GeneralProperty createMockCity() {
+        GeneralProperty cityMock = mock(GeneralProperty.class);
+        when(cityMock.getValue()).thenReturn("Tucson");
+
+        return cityMock;
+    }
+
     private State createMockState() {
         State stateMock = mock(State.class);
         when(stateMock.getValue()).thenReturn("AZ");
@@ -26,12 +47,10 @@ class AddressTest {
         return zipMock;
     }
 
+
     private Address createTestAddress() {
 
-        return new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
-                SharedTestHelpers.createMockContactProperty("10"),
-                SharedTestHelpers.createMockContactProperty("Tucson"),
-                createMockState(),
+        return new Address(createMockStreetAddress(), createMockApartment(), createMockCity(), createMockState(),
                 createMockZip());
     }
 
@@ -49,11 +68,8 @@ class AddressTest {
     @Test
     void Constructor_ApartmentAndZipOptional()
     {
-        Address address = new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
-                null,
-                SharedTestHelpers.createMockContactProperty("Tucson"),
-                createMockState(),
-                null);
+        Address address = new Address(createMockStreetAddress(), null, createMockCity(),
+                createMockState(), null);
 
         assertNotNull(address);
     }
@@ -62,18 +78,14 @@ class AddressTest {
     void Constructor_NullStreetAddress()
     {
         assertThrows(IllegalArgumentException.class, () ->
-                new Address(null,
-                        null,
-                        SharedTestHelpers.createMockContactProperty("Tucson"),
-                        createMockState(),
-                        null));
+                new Address(null, null, createMockCity(), createMockState(), null));
     }
 
     @Test
     void Constructor_NullCity()
     {
         assertThrows(IllegalArgumentException.class, () ->
-                new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
+                new Address(createMockStreetAddress(),
                         null,
                         null,
                         createMockState(),
@@ -84,10 +96,7 @@ class AddressTest {
     void Constructor_NullState()
     {
         assertThrows(IllegalArgumentException.class, () ->
-                new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
-                        null,
-                        SharedTestHelpers.createMockContactProperty("Tucson"),
-                        null, null));
+                new Address(createMockStreetAddress(), null, createMockCity(), null, null));
     }
 
     /* ----------------------------------------------------------------------------------
@@ -99,19 +108,19 @@ class AddressTest {
     // its parts with this object.
     private IContactProperty<Address> createAddressStub(boolean apartmentSet, boolean zipSet)
     {
-        IContactProperty<String> streetAddressMock = mock(IContactProperty.class);
+        StreetAddress streetAddressMock = mock(StreetAddress.class);
         when(streetAddressMock.getValue()).thenReturn("This is where you would find the StreetAddress value");
 
-        IContactProperty<String> cityMock = mock(IContactProperty.class);
+        GeneralProperty cityMock = mock(GeneralProperty.class);
         when(cityMock.getValue()).thenReturn("This is where you would find City value");
 
         State stateMock = mock(State.class);
         when(stateMock.getValue()).thenReturn("This is where you would find State value");
 
-        IContactProperty<String> apartmentMock = null;
+        Apartment apartmentMock = null;
 
         if (apartmentSet) {
-            apartmentMock = mock(IContactProperty.class);
+            apartmentMock = mock(Apartment.class);
             when(apartmentMock.getValue()).thenReturn("This is where you would find Apartment value");
         }
 
@@ -140,20 +149,20 @@ class AddressTest {
                                 boolean targetZipSet)
     {
         // Set up Address with mock internals
-        IContactProperty streetAddressMock = mock(IContactProperty.class);
+        StreetAddress streetAddressMock = mock(StreetAddress.class);
         when(streetAddressMock.isMatch(any())).thenReturn(answerTypeForStreetAddressIsMatch);
 
-        IContactProperty cityMock = mock(IContactProperty.class);
+        GeneralProperty cityMock = mock(GeneralProperty.class);
         when(cityMock.isMatch(any())).thenReturn(answerTypeForCityIsMatch);
 
         State stateMock = mock(State.class);
         when(stateMock.isMatch(any())).thenReturn(answerTypeForStateIsMatch);
 
-        IContactProperty apartmentMock = null;
+        Apartment apartmentMock = null;
         boolean sourceApartmentSet = answerTypeForApartmentIsMatch != null;
 
         if (sourceApartmentSet) {
-            apartmentMock = mock(IContactProperty.class);
+            apartmentMock = mock(Apartment.class);
             when(apartmentMock.isMatch(any())).thenReturn(answerTypeForApartmentIsMatch);
         }
 
@@ -341,11 +350,8 @@ class AddressTest {
 
     @Test
     void Address_toString_MissingApartmentAndZip() {
-        Address address = new Address(SharedTestHelpers.createMockContactProperty("123 Main St"),
-                null,
-                SharedTestHelpers.createMockContactProperty("Tucson"),
-                createMockState(),
-                null);
+        Address address = new Address(createMockStreetAddress(), null, createMockCity(),
+                createMockState(), null);
 
         assertEquals("123 Main St, Tucson, AZ", address.toString());
     }

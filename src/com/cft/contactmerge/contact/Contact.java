@@ -11,7 +11,7 @@ public class Contact implements IContact {
 
     // TODO: Should support multiple addresses, phones, and emails for each contact
     private IContactProperty<Address> address;
-    private IContactProperty<String> phone;
+    private PhoneNumber phone;
     private IContactProperty<String> email;
 
     // TODO: Name should be required for a Contract (i.e. add constructor to override default constructor)
@@ -25,8 +25,8 @@ public class Contact implements IContact {
     public void setAddress(IContactProperty<Address> address) { this.address = address; }
     public IContactProperty<Address> getAddress() { return this.address; };
 
-    public void setPhone(IContactProperty<String> phone) { this.phone = phone; };
-    public IContactProperty<String> getPhone() { return this.phone; };
+    public void setPhone(PhoneNumber phone) { this.phone = phone; };
+    public PhoneNumber getPhone() { return this.phone; };
 
     public void setEmail(IContactProperty<String> email) { this.email = email; };
     public IContactProperty<String> getEmail() { return this.email; };
