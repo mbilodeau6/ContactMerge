@@ -85,7 +85,7 @@ class ContactMatchingHelpersTest {
     @Test
     void hasContactInfo_true_hasAdress() {
         IContact contact = mock(IContact.class);
-        when(contact.getAddress()).thenReturn(mock(IContactProperty.class));
+        when(contact.getAddress()).thenReturn(mock(Address.class));
         assertTrue(ContactMatchingHelpers.hasContactInfo(contact));
     }
 
@@ -99,7 +99,7 @@ class ContactMatchingHelpersTest {
     @Test
     void hasContactInfo_true_hasEmail() {
         IContact contact = mock(IContact.class);
-        when(contact.getEmail()).thenReturn(mock(IContactProperty.class));
+        when(contact.getEmail()).thenReturn(mock(GeneralProperty.class));
         assertTrue(ContactMatchingHelpers.hasContactInfo(contact));
     }
 

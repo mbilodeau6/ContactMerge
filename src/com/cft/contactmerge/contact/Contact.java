@@ -6,30 +6,30 @@ import java.util.Dictionary;
 import java.util.HashMap;
 
 public class Contact implements IContact {
-    private IContactProperty<Name> name;
+    private Name name;
     private HashMap<String, String> properties = new HashMap<String, String>();
 
     // TODO: Should support multiple addresses, phones, and emails for each contact
-    private IContactProperty<Address> address;
+    private Address address;
     private PhoneNumber phone;
-    private IContactProperty<String> email;
+    private GeneralProperty email;
 
     // TODO: Name should be required for a Contract (i.e. add constructor to override default constructor)
 
-    public void setName(IContactProperty<Name> name)
+    public void setName(Name name)
     {
         this.name = name;
     }
-    public IContactProperty<Name> getName() { return this.name; }
+    public Name getName() { return this.name; }
 
-    public void setAddress(IContactProperty<Address> address) { this.address = address; }
-    public IContactProperty<Address> getAddress() { return this.address; };
+    public void setAddress(Address address) { this.address = address; }
+    public Address getAddress() { return this.address; };
 
     public void setPhone(PhoneNumber phone) { this.phone = phone; };
     public PhoneNumber getPhone() { return this.phone; };
 
-    public void setEmail(IContactProperty<String> email) { this.email = email; };
-    public IContactProperty<String> getEmail() { return this.email; };
+    public void setEmail(GeneralProperty email) { this.email = email; };
+    public GeneralProperty getEmail() { return this.email; };
 
     private ContactMatchResult calculateMatchResult(AnswerType nameMatch,
                                                     ContactMatchTally tally,

@@ -23,7 +23,7 @@ class ContactTest {
     @Test
     void setName() {
         Contact newContact = new Contact();
-        IContactProperty<Name> mockName = mock(Name.class);
+        Name mockName = mock(Name.class);
 
         newContact.setName(mockName);
 
@@ -33,7 +33,7 @@ class ContactTest {
     @Test
     void setAddress() {
         Contact newContact = new Contact();
-        IContactProperty<Address> mockAddress = mock(Address.class);
+        Address mockAddress = mock(Address.class);
 
         newContact.setAddress(mockAddress);
 
@@ -53,7 +53,7 @@ class ContactTest {
     @Test
     void setEmail() {
         Contact newContact = new Contact();
-        IContactProperty<String> mockEmail = mock(IContactProperty.class);
+        GeneralProperty mockEmail = mock(GeneralProperty.class);
 
         newContact.setEmail(mockEmail);
         assertEquals(mockEmail, newContact.getEmail());
@@ -86,9 +86,9 @@ class ContactTest {
     // its parts with this object.
     private IContact createContactStub(boolean addressSet, boolean phoneSet, boolean emailSet)
     {
-        IContactProperty<Name> nameMock = mock(Name.class);
+        Name nameMock = mock(Name.class);
 
-        IContactProperty<Address> addressMock = null;
+        Address addressMock = null;
 
         if (addressSet) {
             addressMock = mock(Address.class);
@@ -101,10 +101,10 @@ class ContactTest {
             phoneMock = mock(PhoneNumber.class);
         }
 
-        IContactProperty<String> emailMock = null;
+        GeneralProperty emailMock = null;
 
         if (emailSet) {
-            emailMock = mock(IContactProperty.class);
+            emailMock = mock(GeneralProperty.class);
         }
 
         IContact contactToCompareWith = mock(Contact.class);
@@ -128,10 +128,10 @@ class ContactTest {
                                 boolean targetEmailSet)
     {
         // Set up Address with mock internals
-        IContactProperty<Name> nameMock = mock(Name.class);
+        Name nameMock = mock(Name.class);
         when(nameMock.isMatch(any())).thenReturn(answerTypeForNameIsMatch);
 
-        IContactProperty<Address> addressMock = null;
+        Address addressMock = null;
         boolean sourceAddressSet = answerTypeForAddressIsMatch != null;
 
         if (sourceAddressSet) {
@@ -147,11 +147,11 @@ class ContactTest {
             when(phoneMock.isMatch(any())).thenReturn(answerTypeForPhoneIsMatch);
         }
 
-        IContactProperty emailMock = null;
+        GeneralProperty emailMock = null;
         boolean sourceEmailSet = answerTypeForEmailIsMatch != null;
 
         if (sourceEmailSet) {
-            emailMock = mock(IContactProperty.class);
+            emailMock = mock(GeneralProperty.class);
             when(emailMock.isMatch(any())).thenReturn(answerTypeForEmailIsMatch);
         }
 
