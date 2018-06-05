@@ -6,10 +6,10 @@ import java.rmi.UnexpectedException;
 
 public class Name implements IContactProperty<Name>
 {
-    private IContactProperty<String> firstName;
-    private IContactProperty<String> lastName;
+    private FirstName firstName;
+    private LastName lastName;
 
-    public Name(IContactProperty<String> lastName, IContactProperty<String> firstName)
+    public Name(LastName lastName, FirstName firstName)
     {
         if (lastName == null) {
             throw new IllegalArgumentException("LastName is required");
@@ -25,8 +25,8 @@ public class Name implements IContactProperty<Name>
 
     public AnswerType isMatch(IContactProperty<Name> otherName) {
 
-        IContactProperty<String> firstNameToCompareWith = otherName.getValue().getFirstName();
-        IContactProperty<String> lastNameToCompareWith = otherName.getValue().getLastName();
+        FirstName firstNameToCompareWith = otherName.getValue().getFirstName();
+        LastName lastNameToCompareWith = otherName.getValue().getLastName();
 
         switch (lastName.isMatch(lastNameToCompareWith))
         {
@@ -50,12 +50,12 @@ public class Name implements IContactProperty<Name>
         return lastName.getValue() + ", " + firstName.getValue();
     }
 
-    public IContactProperty<String> getFirstName()
+    public FirstName getFirstName()
     {
         return firstName;
     }
 
-    public IContactProperty<String> getLastName()
+    public LastName getLastName()
     {
         return lastName;
     }

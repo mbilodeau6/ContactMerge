@@ -19,7 +19,7 @@ class ContactMatchingHelpersTest {
     // compared with the ProposedMatch.getContactToMerge.
     private ProposedMatch createProposedMatchWithMockContacts(Collection<ContactMatchType> desiredCompareToResults) {
         IContact contactToMerge = mock(IContact.class);
-        when(contactToMerge.getPhone()).thenReturn(mock(IContactProperty.class));
+        when(contactToMerge.getPhone()).thenReturn(mock(PhoneNumber.class));
 
         List<IContact> possibleTargetContacts = new ArrayList<IContact>();
 
@@ -92,7 +92,7 @@ class ContactMatchingHelpersTest {
     @Test
     void hasContactInfo_true_hasPhone() {
         IContact contact = mock(IContact.class);
-        when(contact.getPhone()).thenReturn(mock(IContactProperty.class));
+        when(contact.getPhone()).thenReturn(mock(PhoneNumber.class));
         assertTrue(ContactMatchingHelpers.hasContactInfo(contact));
     }
 
@@ -112,7 +112,7 @@ class ContactMatchingHelpersTest {
     @Test
     void getSuggestedAction_add_noMatches() {
         IContact contact = mock(IContact.class);
-        when(contact.getPhone()).thenReturn(mock(IContactProperty.class));
+        when(contact.getPhone()).thenReturn(mock(PhoneNumber.class));
 
         ProposedMatch proposedMatch = new ProposedMatch(contact, new ArrayList<IContact>());
 

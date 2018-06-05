@@ -14,6 +14,20 @@ import com.cft.contactmerge.contact.*;
 
 class NameTest {
 
+    private LastName createMockLastName(String lastName) {
+        LastName lastNameMock = mock(LastName.class);
+        when(lastNameMock.getValue()).thenReturn(lastName);
+
+        return lastNameMock;
+    }
+
+    private FirstName createMockFirstName(String firstName) {
+        FirstName firstNameMock = mock(FirstName.class);
+        when(firstNameMock.getValue()).thenReturn(firstName);
+
+        return firstNameMock;
+    }
+
     /* -------------------------------------------------------------------------------------
      * Constructor Tests
      * -------------------------------------------------------------------------------------
@@ -21,8 +35,7 @@ class NameTest {
     @Test
     void Constructor()
     {
-        Name property = new Name(SharedTestHelpers.createMockContactProperty("Doe"),
-                SharedTestHelpers.createMockContactProperty("Jane"));
+        Name property = new Name(createMockLastName("Doe"), createMockFirstName("Jane"));
 
         assertNotNull(property);
     }
@@ -31,14 +44,14 @@ class NameTest {
     void Constructor_NullLastName()
     {
         assertThrows(IllegalArgumentException.class, () ->
-                new Name(null, SharedTestHelpers.createMockContactProperty("Jane")));
+                new Name(null, createMockFirstName("Jane")));
     }
 
     @Test
     void Constructor_NullFirstName()
     {
         assertThrows(IllegalArgumentException.class, () ->
-                new Name(SharedTestHelpers.createMockContactProperty("Doe"), null));
+                new Name(createMockLastName("Doe"), null));
     }
 
     /* -------------------------------------------------------------------------------------
@@ -47,8 +60,8 @@ class NameTest {
      */
     @Test
     void getValue() {
-        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
-        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
+        LastName mockLastName = createMockLastName("Doe");
+        FirstName mockFirstName = createMockFirstName("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -58,8 +71,8 @@ class NameTest {
 
     @Test
     void Name_toString() {
-        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
-        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
+        LastName mockLastName = createMockLastName("Doe");
+        FirstName mockFirstName = createMockFirstName("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -68,8 +81,8 @@ class NameTest {
 
     @Test
     void getFirstName() {
-        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
-        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
+        LastName mockLastName = createMockLastName("Doe");
+        FirstName mockFirstName = createMockFirstName("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -78,8 +91,8 @@ class NameTest {
 
     @Test
     void getLastName() {
-        IContactProperty<String> mockLastName = SharedTestHelpers.createMockContactProperty("Doe");
-        IContactProperty<String> mockFirstName = SharedTestHelpers.createMockContactProperty("Jane");
+        LastName mockLastName = createMockLastName("Doe");
+        FirstName mockFirstName = createMockFirstName("Jane");
 
         Name property = new Name(mockLastName, mockFirstName);
 
@@ -96,10 +109,10 @@ class NameTest {
     private IContactProperty<Name> createNameStub()
     {
 
-        IContactProperty<String> lastNameMock = mock(IContactProperty.class);
+        LastName lastNameMock = mock(LastName.class);
         when(lastNameMock.getValue()).thenReturn("This is where you would find LastName value");
 
-        IContactProperty<String> firstNameMock = mock(IContactProperty.class);
+        FirstName firstNameMock = mock(FirstName.class);
         when(firstNameMock.getValue()).thenReturn("This is where you would find FirstName value");
 
         IContactProperty<Name> nameToCompareWith = mock(IContactProperty.class);
@@ -115,10 +128,10 @@ class NameTest {
                                 AnswerType expectedAnswerType)
     {
         // Set up Name with mock internals
-        IContactProperty lastNameMock = mock(IContactProperty.class);
+        LastName lastNameMock = mock(LastName.class);
         when(lastNameMock.isMatch(any())).thenReturn(answerTypeForLastNameIsMatch);
 
-        IContactProperty firstNameMock = mock(IContactProperty.class);
+        FirstName firstNameMock = mock(FirstName.class);
         when(firstNameMock.isMatch(any())).thenReturn(answerTypeForFirstNameIsMatch);
 
         Name nameWithMockInternals = new Name(lastNameMock, firstNameMock);

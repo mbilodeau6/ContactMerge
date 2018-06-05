@@ -43,7 +43,7 @@ class ContactTest {
     @Test
     void setPhone() {
         Contact newContact = new Contact();
-        IContactProperty<String> mockPhoneNumber = mock(IContactProperty.class);
+        PhoneNumber mockPhoneNumber = mock(PhoneNumber.class);
 
         newContact.setPhone(mockPhoneNumber);
 
@@ -95,10 +95,10 @@ class ContactTest {
 //        when(streetAddressMock.getValue()).thenReturn("This is where you would find the StreetAddress value");
         }
 
-        IContactProperty<String> phoneMock = null;
+        PhoneNumber phoneMock = null;
 
         if (phoneSet) {
-            phoneMock = mock(IContactProperty.class);
+            phoneMock = mock(PhoneNumber.class);
         }
 
         IContactProperty<String> emailMock = null;
@@ -139,11 +139,11 @@ class ContactTest {
             when(addressMock.isMatch(any())).thenReturn(answerTypeForAddressIsMatch);
         }
 
-        IContactProperty phoneMock = null;
+        PhoneNumber phoneMock = null;
         boolean sourcePhoneSet = answerTypeForPhoneIsMatch != null;
 
         if (sourcePhoneSet) {
-            phoneMock = mock(IContactProperty.class);
+            phoneMock = mock(PhoneNumber.class);
             when(phoneMock.isMatch(any())).thenReturn(answerTypeForPhoneIsMatch);
         }
 
@@ -429,7 +429,7 @@ class ContactTest {
     void compareTo_Related_RealContacts() {
         Contact c1 = createBaseContact();
         Contact c2 = new Contact();
-        c2.setName(new Name(new FirstName("Adam"), new LastName("Smith")));
+        c2.setName(new Name(new LastName("Smith"), new FirstName("Adam")));
         c2.setAddress(new Address(new StreetAddress("92 Broadway"),
                 null,
                 new GeneralProperty("Tucson"),
