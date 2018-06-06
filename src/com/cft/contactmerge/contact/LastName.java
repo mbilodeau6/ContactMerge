@@ -15,7 +15,7 @@ public class LastName extends GeneralProperty {
     }
 
     @Override
-    public AnswerType isMatch(IContactProperty<String> otherProperty) {
-        return PropertyMatchingHelpers.doNamePartsMatch(this.getValue(), otherProperty.getValue());
+    public AnswerType isMatch(IContactProperty<String> otherLastName) {
+        return PropertyMatchingHelpers.doNamePartsMatch(this.getValue(), otherLastName.getValue());
     }
 }

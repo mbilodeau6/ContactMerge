@@ -8,15 +8,15 @@ public class Zip extends GeneralProperty {
     }
 
     @Override
-    public AnswerType isMatch(IContactProperty<String> otherProperty) {
-        if (PropertyMatchingHelpers.doPropertyPartsMatch(this.value, otherProperty.getValue()) == AnswerType.yes) {
+    public AnswerType isMatch(IContactProperty<String> otherZip) {
+        if (PropertyMatchingHelpers.doPropertyPartsMatch(this.value, otherZip.getValue()) == AnswerType.yes) {
             return AnswerType.yes;
         }
 
-        if (this.value.length() > 4 && otherProperty.getValue().length() > 4 &&
-                !PropertyMatchingHelpers.containsAlpha(this.value) && !PropertyMatchingHelpers.containsAlpha(otherProperty.getValue())) {
+        if (this.value.length() > 4 && otherZip.getValue().length() > 4 &&
+                !PropertyMatchingHelpers.containsAlpha(this.value) && !PropertyMatchingHelpers.containsAlpha(otherZip.getValue())) {
             String mainPartSource = this.value.substring(0, 5);
-            String mainPartTarget = otherProperty.getValue().substring(0, 5);
+            String mainPartTarget = otherZip.getValue().substring(0, 5);
 
             return (PropertyMatchingHelpers.doPropertyPartsMatch(mainPartSource, mainPartTarget));
         }

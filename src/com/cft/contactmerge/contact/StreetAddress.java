@@ -23,9 +23,9 @@ public class StreetAddress extends GeneralProperty {
     }
 
     @Override
-    public AnswerType isMatch(IContactProperty<String> otherProperty) {
+    public AnswerType isMatch(IContactProperty<String> otherStreetAddress) {
         // Test for exact match
-        if (PropertyMatchingHelpers.doPropertyPartsMatch(this.getValue(), otherProperty.getValue()) == AnswerType.yes)
+        if (PropertyMatchingHelpers.doPropertyPartsMatch(this.getValue(), otherStreetAddress.getValue()) == AnswerType.yes)
         {
             return AnswerType.yes;
         }
@@ -35,7 +35,7 @@ public class StreetAddress extends GeneralProperty {
         sourceParts.removeAll(addressDirections);
         sourceParts.removeAll(streetTypes);
 
-        Collection<String> targetParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlphaNumeric(otherProperty.getValue());
+        Collection<String> targetParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlphaNumeric(otherStreetAddress.getValue());
         targetParts.removeAll(addressDirections);
         targetParts.removeAll(streetTypes);
 

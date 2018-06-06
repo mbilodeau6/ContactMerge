@@ -1,6 +1,7 @@
-package com.cft.contactmerge.contact;
+package com.cft.contactmerge.contact.tests;
 
 import com.cft.contactmerge.AnswerType;
+import com.cft.contactmerge.contact.Zip;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
