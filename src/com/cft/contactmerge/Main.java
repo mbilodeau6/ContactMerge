@@ -14,13 +14,18 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws IOException {
 
+        if (args.length < 3) {
+            System.out.println("USAGE: ContactMerge <existingContactsFile> <contactsToMergeFile> <mergeOutputFile>");
+            return;
+        }
+
         System.out.println("Loading Merge Target...");
 
         List<IContact> existingContacts = new ArrayList<IContact>();
         XmlImporter existingContactImporter = new XmlImporter();
 
         try {
-            existingContactImporter.Load("C:\\Users\\mbilo\\Documents\\ITK\\Data\\allDonors.xml");
+            existingContactImporter.Load(args[0]);
         }
         catch (IOException e)
         {
@@ -40,7 +45,7 @@ public class Main {
         CsvImporter toMergeImporter = new CsvImporter();
 
         try {
-            toMergeImporter.Load("C:\\Users\\mbilo\\Documents\\ITK\\Data\\Gala2018Attendees.csv");
+            toMergeImporter.Load(args[1]);
         }
         catch (IOException e)
         {
@@ -60,9 +65,7 @@ public class Main {
         List<ProposedMatch> matches = matchMaker.getProposedMatches();
 
         MergeFileExporter exporter = new MergeFileExporter(matches);
-        exporter.createMergeFile(SupportedFileType.TSV,
-                "C:\\Users\\mbilo\\Documents\\ITK\\Data\\TestMergeRecommendations.tsv",
-                null);
+        exporter.createMergeFile(SupportedFileType.TSV, args[2], null);
 
         System.out.println();
 
