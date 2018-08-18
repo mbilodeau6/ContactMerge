@@ -156,6 +156,12 @@ public class XmlImporter implements IImporter, Iterable<Contact> {
                     contact.setPropertyValue("ContactId", propertyValue);
                 }
 
+                propertyValue = data.get(columnMap.get("donor_profile_display"));
+
+                if (propertyValue != null) {
+                    contact.setPropertyValue("ContactType", propertyValue);
+                }
+
                 return contact;
             }
 

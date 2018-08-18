@@ -42,7 +42,7 @@ public class MergeFileExporter{
     private void writeContact(BufferedWriter writer, IContact contact, boolean contactToMerge,
                               ContactMatchType matchType, MatchAction action)
             throws IOException {
-        writer.write( String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
+        writer.write( String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
                 contact.getName().getValue().getLastName(),
                 contact.getName().getValue().getFirstName(),
                 contact.getAddress() == null ? "" : contact.getAddress().getValue().getStreetAddress(),
@@ -53,6 +53,7 @@ public class MergeFileExporter{
                 contact.getEmail() == null ? "" : contact.getEmail(),
                 contactToMerge == true ? "Yes" : "No",
                 contact.containsProperty("ContactId") ? contact.getPropertyValue("ContactId"): "",
+                contact.containsProperty("ContactType") ? contact.getPropertyValue("ContactType"): "",
                 matchType == null ? "" : matchType.toString(),
                 action == null ? "" : action.toString()));
         writer.newLine();
@@ -87,7 +88,7 @@ public class MergeFileExporter{
         // into the target system but for now we are creating a file that lists all of the
         // potential matches.
         try (BufferedWriter writer = new BufferedWriter(fw)) {
-            writer.write("LastName\tFirstName\tStreetName\tCity\tState\tZip\tPhone\tEmail\tContactToMerge\tContactId\tMatchType\tProposedAction");
+            writer.write("LastName\tFirstName\tStreetName\tCity\tState\tZip\tPhone\tEmail\tContactToMerge\tContactId\tContactType\tMatchType\tProposedAction");
             writer.newLine();
             for(ProposedMatch match: proposedMatches) {
                 IContact contactToMerge = match.getContactToMerge();

@@ -81,8 +81,13 @@ public class PropertyMatchingHelpers {
             return AnswerType.yes;
         }
 
+        Collection<String> commonWords = Arrays.asList("and");
+
         Collection<String> sourceParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlpha(namePartSource);
+        sourceParts.removeAll(commonWords);
+
         Collection<String> targetParts = PropertyMatchingHelpers.splitPropertyStringOnNonAlpha(namePartTarget);
+        targetParts.removeAll(commonWords);
 
         return PropertyMatchingHelpers.doPropertyPartsMatchOrderDoesNotMatter(sourceParts, targetParts);
     }

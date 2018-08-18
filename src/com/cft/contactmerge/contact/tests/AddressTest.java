@@ -47,7 +47,6 @@ class AddressTest {
         return zipMock;
     }
 
-
     private Address createTestAddress() {
 
         return new Address(createMockStreetAddress(), createMockApartment(), createMockCity(), createMockState(),
@@ -224,8 +223,8 @@ class AddressTest {
     }
 
     @Test
-    void isMatch_Yes_AllPartsMatchButZipIsMaybe() {
-        runIsMatchTest(AnswerType.yes, AnswerType.yes, AnswerType.yes, AnswerType.yes, AnswerType.maybe, AnswerType.yes);
+    void isMatch_Maybe_AllPartsMatchButZipIsMaybe() {
+        runIsMatchTest(AnswerType.yes, AnswerType.yes, AnswerType.yes, AnswerType.yes, AnswerType.maybe, AnswerType.maybe);
     }
 
     @Test

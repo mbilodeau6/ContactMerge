@@ -95,47 +95,52 @@ public class CsvImporter implements IImporter, Iterable<Contact> {
 
                 List<String> parts = SplitStringUtilities.splitCsvString(data.get(currentIndex++));
 
-                String lastName = parts.get(columnMap.get("Last"));
-                String firstName = parts.get(columnMap.get("First"));
+                try {
+                    String lastName = parts.get(columnMap.get("Last"));
+                    String firstName = parts.get(columnMap.get("First"));
 
-                if (lastName == null || firstName == null || lastName.isEmpty() || firstName.isEmpty()) {
-                    throw new IllegalStateException();
+                    if (lastName == null || firstName == null || lastName.isEmpty() || firstName.isEmpty()) {
+                        throw new IllegalStateException();
+                    }
+                    contact.setName(new Name(new LastName(lastName), new FirstName(firstName)));
+
+                    String streetAddress = parts.get(columnMap.get("Address"));
+                    String city = parts.get(columnMap.get("City"));
+                    String state = parts.get(columnMap.get("State"));
+                    String zip = parts.get(columnMap.get("Zip"));
+
+                    if (streetAddress != null && !streetAddress.isEmpty() &&
+                            city != null && !city.isEmpty() &&
+                            state != null && !state.isEmpty() &&
+                            zip != null && !zip.isEmpty()) {
+                        contact.setAddress(new Address(new StreetAddress(streetAddress),
+                                null,
+                                new GeneralProperty(city),
+                                new State(state),
+                                new Zip(zip)));
+                    }
+
+                    String phone = parts.get(columnMap.get("Phone #"));
+
+                    if (phone != null && !phone.isEmpty()) {
+                        contact.setPhone(new PhoneNumber(phone));
+                    }
+
+                    String email = parts.get(columnMap.get("E-mail"));
+
+                    if (email != null && !email.isEmpty()) {
+                        contact.setEmail(new GeneralProperty(email));
+                    }
+
+                    // TODO: When column maps are supported, should pull in identified properties
+                    String propertyValue = parts.get(columnMap.get("Bidder #"));
+
+                    if (propertyValue != null) {
+                        contact.setPropertyValue("ContactId", propertyValue);
+                    }
                 }
-                contact.setName(new Name(new LastName(lastName), new FirstName(firstName)));
-
-                String streetAddress = parts.get(columnMap.get("Address"));
-                String city = parts.get(columnMap.get("City"));
-                String state = parts.get(columnMap.get("State"));
-                String zip = parts.get(columnMap.get("Zip"));
-
-                if (streetAddress != null && !streetAddress.isEmpty() &&
-                        city != null && !city.isEmpty() &&
-                        state != null && !state.isEmpty() &&
-                        zip != null && !zip.isEmpty()) {
-                    contact.setAddress(new Address(new StreetAddress(streetAddress),
-                            null,
-                            new GeneralProperty(city),
-                            new State(state),
-                            new Zip(zip)));
-                }
-
-                String phone = parts.get(columnMap.get("Phone #"));
-
-                if (phone != null && !phone.isEmpty()) {
-                    contact.setPhone(new PhoneNumber(phone));
-                }
-
-                String email = parts.get(columnMap.get("E-mail"));
-
-                if (email != null && !email.isEmpty()) {
-                    contact.setEmail(new GeneralProperty(email));
-                }
-
-                // TODO: When column maps are supported, should pull in identified properties
-                String propertyValue = parts.get(columnMap.get("Bidder #"));
-
-                if (propertyValue != null) {
-                    contact.setPropertyValue("ContactId", propertyValue);
+                catch (IndexOutOfBoundsException e) {
+                    throw new IndexOutOfBoundsException(String.format("Error at index %d: %s", currentIndex, e.getMessage()));
                 }
 
                 return contact;

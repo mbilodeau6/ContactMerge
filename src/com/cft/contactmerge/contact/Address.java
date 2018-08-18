@@ -82,7 +82,7 @@ public class Address implements IContactProperty<Address> {
             return AnswerType.maybe;
 
         if (answerTypesFound.contains(AnswerType.yes)) {
-            if (zipResult == AnswerType.no || apartmentResult == AnswerType.no) {
+            if (zipResult != AnswerType.yes || apartmentResult == AnswerType.no) {
                 return AnswerType.maybe;
             }
 

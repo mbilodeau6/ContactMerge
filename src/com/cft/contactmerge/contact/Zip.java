@@ -18,7 +18,9 @@ public class Zip extends GeneralProperty {
             String mainPartSource = this.value.substring(0, 5);
             String mainPartTarget = otherZip.getValue().substring(0, 5);
 
-            return (PropertyMatchingHelpers.doPropertyPartsMatch(mainPartSource, mainPartTarget));
+            if (PropertyMatchingHelpers.doPropertyPartsMatch(mainPartSource, mainPartTarget) != AnswerType.no) {
+                return AnswerType.maybe;
+            }
         }
 
         return AnswerType.no;

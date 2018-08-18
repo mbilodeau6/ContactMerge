@@ -483,7 +483,7 @@ class ContactTest {
         c2.setPhone(new PhoneNumber("(520) 870-7454"));
         c2.setEmail(new GeneralProperty("18sfuentevilla@salpointe.org"));
 
-        assertEquals(ContactMatchType.Related, c1.compareTo(c2).getMatchType());
+        assertEquals(ContactMatchType.PotentiallyRelated, c1.compareTo(c2).getMatchType());
     }
 
     @Test

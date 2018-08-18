@@ -38,4 +38,12 @@ class LastNameTest {
 
         assertEquals(AnswerType.no, source.isMatch(target));
     }
+
+    @Test
+    void isMatch_No_OnAnd() {
+        LastName source = new LastName("Doe and Adamson");
+        LastName target = new LastName("Smith and Frank");
+
+        assertEquals(AnswerType.no, source.isMatch(target));
+    }
 }

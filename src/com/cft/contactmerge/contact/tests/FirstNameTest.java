@@ -37,4 +37,13 @@ class FirstNameTest {
 
         assertEquals(AnswerType.no, source.isMatch(target));
     }
+
+    @Test
+    void isMatch_No_OnAnd() {
+        FirstName source = new FirstName("Mary and Bob");
+        FirstName target = new FirstName("Mike and Lisa");
+
+        assertEquals(AnswerType.no, source.isMatch(target));
+    }
+
 }

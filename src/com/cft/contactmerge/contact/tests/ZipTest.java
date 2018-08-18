@@ -35,14 +35,14 @@ class ZipTest {
     void isMatch_Yes_MainPart() {
         Zip zip = new Zip("85750-1234");
 
-        assertEquals(AnswerType.yes, zip.isMatch(new Zip("85750")) );
+        assertEquals(AnswerType.maybe, zip.isMatch(new Zip("85750")) );
     }
 
     @Test
     void isMatch_Yes_MainPartReverse() {
         Zip zip = new Zip("85750");
 
-        assertEquals(AnswerType.yes, zip.isMatch(new Zip("85750-1234")) );
+        assertEquals(AnswerType.maybe, zip.isMatch(new Zip("85750-1234")) );
     }
 
     @Test
